@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+
+lab-01/sources/Debug/**
+lab-01/sources/x64/**
+lab-01/sources/Release/**
+lab-01/sources/.vs/**
+lab-01/sources/.vscode/**
