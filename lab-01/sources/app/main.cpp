@@ -6,11 +6,8 @@
 #include "utils/renderer.h"
 
 using namespace std;
-int rx = 100, ry = 125;
-int xCenter = 250, yCenter = 250;
 
-
-
+// this function should be removed after everything complete
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -27,7 +24,7 @@ void display()
     // draw_elipse_midpoint({ 100, 100 }, 100, 30);
     GLUquadricObj* quad = gluNewQuadric();
     gluQuadricDrawStyle(quad, GLU_SILHOUETTE);
-    gluDisk(quad, 0.0, 100, 64, 2);
+    gluDisk(quad, 0.0, 100, 64, 100);
     gluDeleteQuadric(quad);
 
     // draw_hyperpole_midpoint({ 100, 100 }, 100, 30);
