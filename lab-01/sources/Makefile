@@ -5,6 +5,8 @@ cflag = -c -std=c++17
 gllib = -lglut -lGLU -lGL
 exec = ./Release/20120057
 
+all_objects = ./Release/string_tokenizer.o ./Release/main.o ./Release/app_handler.o ./Release/utils.o ./Release/Point.o ./Release/timer.o ./Release/Color.o ./Release/renderer.o
+
 ./Release/string_tokenizer.o: ./app/utils/string_tokenizer.cpp
 	$(compiler) $(cflag) -o ./Release/string_tokenizer.o ./app/utils/string_tokenizer.cpp
 
@@ -32,8 +34,8 @@ exec = ./Release/20120057
 clean:
 	rm -rf ./Release/*.o
 
-all: ./Release/string_tokenizer.o ./Release/main.o ./Release/app_handler.o ./Release/utils.o ./Release/Point.o ./Release/timer.o ./Release/Color.o ./Release/renderer.o
-	$(compiler) -o $(exec) ./Release/main.o ./Release/app_handler.o ./Release/string_tokenizer.o ./Release/utils.o ./Release/Point.o ./Release/timer.o ./Release/Color.o ./Release/renderer.o $(gllib) -std=c++17
+all: $(all_objects)
+	$(compiler) -o $(exec) $(all_objects) $(gllib) -std=c++17
 
 test: all
 	$(exec) 0 20 290 260 10 &
