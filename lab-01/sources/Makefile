@@ -38,22 +38,22 @@ all: $(all_objects)
 	$(compiler) -o $(exec) $(all_objects) $(gllib) -std=c++17
 
 test: all
-	$(exec) 0 20 290 260 10 &
+	$(exec) 0 20 290 500 10 | $(exec) 0 20 290 500 10 | $(exec) 1 20 290 500 10 | $(exec) 2 500 500 300 | $(exec) 3 650 650 100 300 | $(exec) 4 100 100 10 | $(exec) 5 500 500 50 100
 
-test_dda: all
-	$(exec) 0 20 290 260 10 &
+test_line_dda: all
+	$(exec) 0 20 290 450 10 | $(exec) 0 20 20 450 600
 
-test_bresenham: all 
-	$(exec) 1 20 290 260 10 &
+test_line_bresenham: all 
+	$(exec) 1 20 290 450 10 | $(exec) 1 20 20 450 600
 
-test_midpoint_circle: all 
-	$(exec) 2 150 150 70 & 
+test_circle_midpoint: all 
+	$(exec) 2 300 300 300
 
-test_midpoint_elipse: all 
-	$(exec) 3 150 150 70 100 &
+test_elipse_midpoint: all 
+	$(exec) 3 450 450 100 300
 
-test_midpoint_parabole: all 
-	$(exec) 4 100 100 -10 &
+test_parabole_midpoint: all 
+	$(exec) 4 400 400 10 | $(exec) 4 400 400 \-30
 
-test_midpoint_hyperbole: all 
-	$(exec) 5 100 100 10 40 &
+test_hyperbole_midpoint: all 
+	$(exec) 5 350 350 50 100
