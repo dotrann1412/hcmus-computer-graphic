@@ -12,9 +12,11 @@
 #include "../object/Color.h"
 #include <vector>
 
-const int WINDOWS_WIDTH = 600;
-const int WINDOWS_HEIGHT = 600;
+const int WINDOWS_WIDTH = 700;
+const int WINDOWS_HEIGHT = 700;
 
+
+////////////// drawing function
 void draw_line_dda(Point, Point, float point_size = 2.0, Color color = Color::BLACK); // code = 0
 
 void draw_line_bresenham(Point, Point, float point_size = 2.0, Color color = Color::BLACK); // code = 1
@@ -40,7 +42,19 @@ void draw_parapole_midpoint_easycall(std::vector<float>, float point_size = 2.0,
 
 void draw_hyperpole_midpoint_easycall(std::vector<float>, float point_size = 2.0, Color color = Color::BLACK); // code = 5
 
-
 void set_pixel(GLint, GLint);
+
+/////// quick io
+template <class T> 
+std::istream &operator >> (std::istream &s, std::vector<T> &a) {
+	for(T &x: a) s >> x;
+	return s;
+}
+
+template <class T> 
+std::ostream &operator << (std::ostream &s, const std::vector<T> &a) {
+	for(const T &x: a) s << x << ' ';
+	return s;
+}
 
 #endif

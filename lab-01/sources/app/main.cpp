@@ -35,12 +35,12 @@ int main(int argc, char** argv)
 {
     glut_initialize(argv, argc);
 
-    // std::pair<std::function<void(std::vector<float>, float, Color)>, std::vector<float>> 
-    //    params = parse_requirements(argv, argc);
+    std::pair<std::function<void(std::vector<float>, float, Color)>, std::vector<float>> 
+        params = parse_requirements(argv, argc);
 
-    // Renderer::init(params.first, params.second);
+    Renderer::init(params.first, params.second);
 
-    glutDisplayFunc(display);
+    glutDisplayFunc(Renderer::display);
 
     glutMainLoop();
     return 0;

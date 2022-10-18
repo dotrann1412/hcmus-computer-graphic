@@ -7,7 +7,7 @@
 #include <functional>
 #include "../object/Color.h"
 
-// this static class is have 
+// this static class is used to avoid global var using 
 class Renderer
 {
 private:
