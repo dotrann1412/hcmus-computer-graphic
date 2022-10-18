@@ -62,12 +62,6 @@ bool isFloat(const string& s) {
 }
 
 bool validate(const vector<string>& args) {
-    for (int i = 2; i < args.size(); ++i) {
-        cerr << "[DEBUG]: " << args[i] << '\n';
-        if (!isFloat(args[i]))
-            return false;
-    }
-
     if (args.size() == 1)
         return false;
     
@@ -75,13 +69,12 @@ bool validate(const vector<string>& args) {
 }
 
 void help() {
-
+    
 }
 
 std::pair<int, vector<float>> parameters(vector<string> args) {
     if (!validate(args)) {
         return {0, {0, 0, 300, 300}};
-        // throw "Parameters failed on parsing!";
     };
 
     vector<float> params(args.size() - 2);

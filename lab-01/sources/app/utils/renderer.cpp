@@ -13,8 +13,6 @@ void Renderer::display()
     glColor3f(1.0, 0.0, 0.0);
     glPointSize(3.0);
 
-    int x1 = 500, y1 = 5, x2 = 250,  y2 = 250;
-
     Renderer::k_worker(k_parameters, ks_point_size, ks_default_color);
 
     glFlush();

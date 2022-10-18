@@ -1,4 +1,6 @@
 #include "utils.h"
+#include "timer.h"
+
 #include <GL/glut.h>
 #include <cmath>
 
@@ -6,10 +8,8 @@
 
 using std::cerr;
 
-
 void draw_line_dda (Point first, Point last, float point_size, Color color)
 {
-	cerr << "[*][DDA] Drawing line: " << first << '\t' << last << '\n';
 	// code = 1
 	glBegin(GL_POINTS);
 
@@ -41,7 +41,7 @@ void draw_line_dda (Point first, Point last, float point_size, Color color)
 		int interval = dy < 0 ? -1 : 1;
 		float x = first.x();
 		for (int y = first.y(); y != last.y() + interval; y += interval, x += m) {
-			glVertex2i(x, y);
+			glVertex2i(x, y);			
 		}
 	}
 
@@ -50,7 +50,6 @@ void draw_line_dda (Point first, Point last, float point_size, Color color)
 
 void draw_line_bresenham(Point first, Point last, float point_size, Color color)
 {
-	cerr << "[*][BRESENHAM] Drawing line: " << first << '\t' << last << '\n';
 	glBegin(GL_POINTS);
 
 	glPointSize(point_size);
@@ -97,12 +96,6 @@ void draw_line_bresenham(Point first, Point last, float point_size, Color color)
 	glEnd();
 }
 
-void draw_circle_gl(Point center, float r, float point_size, Color color)
-{
-	
-	
-}
-
 void draw_circle_midpoint(Point center, float r, float point_size, Color color)
 {
 	// code = 2
@@ -132,16 +125,10 @@ void draw_circle_midpoint(Point center, float r, float point_size, Color color)
 		glVertex2i(center_x - x, center_y + y); glVertex2i(center_y - y, center_x + x);
 		glVertex2i(center_x - x, center_y - y); glVertex2i(center_y - y, center_x - x);
 
-		cerr << x << ' ' << y << '\n';
 		++x;
 	}
 
 	glEnd();
-}
-
-void draw_elipse_gl(Point center, float r, float point_size, Color color)
-{
-
 }
 
 void draw_elipse_midpoint(Point center, float rx, float ry, float point_size, Color color)
@@ -205,11 +192,6 @@ void draw_elipse_midpoint(Point center, float rx, float ry, float point_size, Co
 	glEnd();
 }
 
-void draw_parapole_gl(Point center, float r, float point_size, Color color)
-{
-
-}
-
 void draw_parapole_midpoint(Point center, float p, float point_size, Color color)
 {
 	glBegin(GL_POINTS);
@@ -245,66 +227,40 @@ void draw_parapole_midpoint(Point center, float p, float point_size, Color color
 	glEnd();
 }
 
-void draw_hyperpole_gl(Point center, float r, float point_size, Color color)
-{
-
-}
-
 void draw_hyperpole_midpoint(Point center, float rx, float ry, float point_size, Color color)
 {
 	// code = 5
 	glBegin(GL_POINTS);
-	int x = 0, y = ry;
-	int64_t rx_squared = rx * rx;
-	int64_t ry_squared = ry * ry;
-	int64_t dx = 2 * ry_squared * x;
-	int64_t dy = 2 * rx_squared * y;
+	glPointSize(point_size);
+	glColor3b(color.R, color.G, color.B);
+	
+	int irx = rx;
+	int iry = ry;
+
+	int64_t rx_squared = irx * irx;
+	int64_t ry_squared = iry * iry;
 
 	int center_x = center.x();
 	int center_y = center.y();
 
-	int64_t d1 = ry_squared - rx_squared * ry + 0.25f * rx_squared;
+	int64_t p = ry_squared * (1.0 * irx - 0.5) * (1.0 * irx - 0.5) - rx_squared - rx_squared * ry_squared;
 
-	while (dx < dy) {
+	glVertex2i(center_x, center_y + irx);
+	glVertex2i(center_x, center_y - irx);
+
+	int x = 1, y = irx;
+	while (center_y + y < WINDOWS_HEIGHT || center_y - y >= 0) {
+		
 		glVertex2i(center_x + x, center_y + y);
 		glVertex2i(center_x + x, center_y - y);
 		glVertex2i(center_x - x, center_y + y);
 		glVertex2i(center_x - x, center_y - y);
 
-		if (d1 < 0) {
-			dx += 2ll * ry_squared;
-			d1 += dx + ry_squared;
-		}
-		else {
-			++y;
-			dx += 2ll * ry_squared;
-			dy -= 2ll * rx_squared;
-			d1 += dx - dy + ry_squared;
-		}
-
+		if (p >= 0) p -= rx_squared * (2ll * x + 3);
+		else p += 2ll * ry_squared * y - rx_squared * (2ll * x + 3), ++y;
 		++x;
 	}
 
-	int64_t d2 = ry_squared * (1.0f * x + 0.5f) * (1.0f * x + 0.5f) + rx_squared * (y - 1) * (y - 1) - rx_squared * ry_squared;
-	while (y < WINDOWS_WIDTH) {
-		glVertex2i(center_x + x, center_y + y);
-		glVertex2i(center_x + x, center_y - y);
-		glVertex2i(center_x - x, center_y + y);
-		glVertex2i(center_x - x, center_y - y);
-
-		if (d2 <= 0) {
-			dy -= 2ll * rx_squared;
-			d2 += rx_squared - dy;
-		}
-		else {
-			++x;
-			dx += 2 * ry_squared;
-			dy -= 2 * rx_squared;
-			d2 += dx - dy + rx_squared;
-		}
-
-		++y;
-	}
 	glEnd();
 }
 
@@ -312,34 +268,57 @@ void draw_hyperpole_midpoint(Point center, float rx, float ry, float point_size,
 
 void draw_line_dda_easycall(std::vector<float> params, float point_size, Color color)
 {
+	cout << "[*][LINE][DDA] Input: " << params << '\n';
+	Timer timer;
+	timer.start();
 	draw_line_dda({params[0], params[1]}, {params[2], params[3]});
+	cout << "\t--> Time executed: " << timer.stop() * 1000 << " (ms)" << '\n';
 } // code = 0
 
 void draw_line_bresenham_easycall(std::vector<float> params, float point_size, Color color)
 {
+	cout << "[*][LINE][BRESENHAM] Input: " << params << '\n';
+	Timer timer;
+	timer.start();
 	draw_line_bresenham({params[0], params[1]}, {params[2], params[3]});
+	cout << "\t--> Time executed: " << timer.stop() * 1000 << " (ms)" << '\n';
 } // code = 1
 
 void draw_circle_midpoint_easycall(std::vector<float> params, float point_size, Color color)
 {
+	cout << "[*][CIRCLE][MIDPOINT] Input: " << params << '\n';
+	Timer timer;
+	timer.start();
 	draw_circle_midpoint({params[0], params[1]}, params[2]);
+	cout << "\t--> Time executed: " << timer.stop() * 1000 << " (ms)" << '\n';
 } // code = 2
 
 void draw_elipse_midpoint_easycall(std::vector<float> params, float point_size, Color color)
 {
+	cout << "[*][ELIPSE][MIDPOINT] Input: " << params << '\n';
+	Timer timer;
+	timer.start();
 	draw_elipse_midpoint({params[0], params[1]}, params[2], params[3]);
+	cout << "\t--> Time executed: " << timer.stop() * 1000 << " (ms)" << '\n';
 } // code = 3 
 
 void draw_parapole_midpoint_easycall(std::vector<float> params, float point_size, Color color)
 {
+	cout << "[*][PARABOLE][MIDPOINT] Input: " << params << '\n';
+	Timer timer;
+	timer.start();
 	draw_parapole_midpoint({params[0], params[1]}, params[2]);
+	cout << "\t--> Time executed: " << timer.stop() * 1000 << " (ms)" << '\n';
 } // code = 4
 
 void draw_hyperpole_midpoint_easycall(std::vector<float> params, float point_size, Color color)
 {
-	draw_elipse_midpoint({params[0], params[1]}, params[2], params[3]);
+	cout << "[*][HYPERBOLE][MIDPOINT] Input: " << params << '\n';
+	Timer timer;
+	timer.start();
+	draw_hyperpole_midpoint({params[0], params[1]}, params[2], params[3]);
+	cout << "\t--> Time executed: " << timer.stop() * 1000 << " (ms)" << '\n';
 } // code = 5
-
 
 void set_pixel(GLint x, GLint y)
 {
