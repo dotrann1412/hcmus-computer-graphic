@@ -1,14 +1,18 @@
-#include <GL/glut.h>
-#include <iostream>
 
-#include "app_handler.h"
+#ifdef __linux__
+#include <GL/glut.h>
+#else
+#include <gl/glut.h>
+#endif
+
+#include <iostream>
 #include "utils/utils.h"
 #include "utils/renderer.h"
 
 using namespace std;
 
 // this function should be removed after everything complete
-void display()
+/*void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -29,19 +33,10 @@ void display()
 
     // draw_hyperpole_midpoint({ 100, 100 }, 100, 30);
     glFlush();
-}
+}*/
 
 int main(int argc, char** argv)
 {
-    glut_initialize(argv, argc);
-
-    std::pair<std::function<void(std::vector<float>, float, Color)>, std::vector<float>> 
-        params = parse_requirements(argv, argc);
-
-    Renderer::init(params.first, params.second);
-
-    glutDisplayFunc(Renderer::display);
-
-    glutMainLoop();
+    Renderer::render(argv, argc);
     return 0;
 }
