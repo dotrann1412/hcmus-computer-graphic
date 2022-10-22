@@ -38,7 +38,7 @@ clean:
 	rm -rf ./Release/*.o
 
 all: $(all_objects)
-	$(compiler) -o $(exec) $(all_objects) $(gllib) -std=c++17
+	$(compiler) -o $(exec) $(all_objects) $(gllib) $(fslib) -std=c++17
 
 test: all
 	$(exec) -f ./Sample-Input/default.in 
@@ -60,3 +60,8 @@ test_parabole_midpoint: all
 
 test_hyperbole_midpoint: all 
 	$(exec) 5 350 350 50 100
+
+setup:
+	echo setting up...
+	sudo apt update
+	sudo apt install libglu1-mesa-dev freeglut3-dev mesa-common-dev
