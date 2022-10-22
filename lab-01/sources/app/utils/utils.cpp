@@ -14,7 +14,7 @@
 using std::cerr;
 
 bool isInt(const string& s) {
-    bool is_negative = false;
+    bool is_negative = s[0] == '-';
 
     if (!s.size())
         return false;
