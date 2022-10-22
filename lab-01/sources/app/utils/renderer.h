@@ -1,7 +1,7 @@
 #ifndef _RENDERER_H_
 #define _RENDERER_H_
 
-#ifdef __linux__
+#ifdef __linux__ 
 #include <GL/glut.h>
 #else
 #include <gl/glut.h>
@@ -54,6 +54,8 @@ public: // algorithms
 
     static void draw_hyperpole_midpoint(Point, float, float); // code = 5
 
+    static void draw_line_opengl(Point, Point); // code = -1
+
 public: // easy call
 
     static void draw_line_dda_easycall(std::vector<float>); // code = 0
@@ -68,10 +70,9 @@ public: // easy call
 
     static void draw_hyperpole_midpoint_easycall(std::vector<float>); // code = 5
 
+    static void draw_line_opengl_easycall(std::vector<float>); // code = -1 
+
 public: // utils function
-
-    static void set_pixel(GLint, GLint);
-
     static void glut_initialize(char** args, int args_count);
 
     static void add_obj(const std::string&);
