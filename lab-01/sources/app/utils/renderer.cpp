@@ -1,5 +1,10 @@
+#if _MSC_VER && !__INTEL_COMPILER
+#pragma warning (disable : 26451)
+#endif // turn off integer overflow warning while devleoped in visual studio
+
 #include "renderer.h"
 #include "path.h"
+
 #include "utils.h"
 
 #include <iostream>
@@ -25,6 +30,7 @@ std::vector<std::function<void(std::vector<float>)>> Renderer::k_workers;
 std::vector<std::vector<float>> Renderer::k_parameters;
 
 const std::map<int, std::function<void(std::vector<float>)>> Renderer::function_mapping = {
+    {-1, Renderer::draw_line_opengl_easycall},
     {0, Renderer::draw_line_dda_easycall},
     {1, Renderer::draw_line_bresenham_easycall},
     {2, Renderer::draw_circle_midpoint_easycall},
@@ -34,6 +40,7 @@ const std::map<int, std::function<void(std::vector<float>)>> Renderer::function_
 };
 
 const std::map<int, std::string> Renderer::window_title_mapping = {
+    {-1, "draw_line_opengl_easycall"},
     {0, "draw_line_dda_easycall"},
     {1, "draw_line_bresenham_easycall"},
     {2, "draw_circle_midpoint_easycall"},
@@ -79,7 +86,8 @@ void Renderer::render(char** args, int argcnt)
     // run with files
     if (argcnt > 2 && string(args[1]) == "-f") {
         string filepath = args[2];
-        if (!Path::exists(filepath) or !Path::isFile(filepath)) {
+        
+        if (!Path::exists(filepath) || !Path::isFile(filepath)) {
             cout << "[*][ERROR] Program is running with wrong format of parameters, try again!" << '\n';
             return;
         }
@@ -123,6 +131,11 @@ void Renderer::render(char** args, int argcnt)
 
 void Renderer::draw_line_dda (Point first, Point last)
 {
+    // this is an algorithm that uses floating point for calculating
+    // because the slope of line is constant
+    // --> use it to cumulative calculating
+    // read the report.pdf for more details.
+
     // code = 1
     glBegin(GL_POINTS);
 
@@ -152,10 +165,20 @@ void Renderer::draw_line_dda (Point first, Point last)
     glEnd();
 }
 
+void Renderer::draw_line_opengl(Point first, Point last)
+{
+    // code = -1
+    
+    glBegin(GL_LINES);
+        glVertex2f(first.x(), first.y());
+        glVertex2f(last.x(), last.y());
+    glEnd();
+}
+
 void Renderer::draw_line_bresenham(Point first, Point last)
 {
-    glBegin(GL_POINTS);
-
+    // this algorithm just uses integers for all the calculating processed.
+    // read the report.pdf for more details.
 
     if (first > last)
         swap(first, last);
@@ -166,6 +189,7 @@ void Renderer::draw_line_bresenham(Point first, Point last)
     bool is_negative_slope = false;
     if (dy < 0) dy = -dy, is_negative_slope = true;
 
+    glBegin(GL_POINTS);
     if (dx > dy) {
         int p = 2 * dy - dx;
         const int A = 2 * dy;
@@ -200,10 +224,14 @@ void Renderer::draw_line_bresenham(Point first, Point last)
 
 void Renderer::draw_circle_midpoint(Point center, float r)
 {
-    // code = 2
-    glBegin(GL_POINTS);
+    // like bresenham, midpoint is an algorithm that use dynamic programming and integer only!
+    // In one step we choose the x[i+1], y[i+1]
+    // estimated that calculations on floating point take time 
+    //      more than 2 or 3 times compared with calculating on integer
+    // --> this is a high performance algorithm
+    // read the report.pdf for more details.
 
-    
+    glBegin(GL_POINTS);
 
     int center_x = center.x(); // move here for faster computing
     int center_y = center.y();
@@ -218,7 +246,7 @@ void Renderer::draw_circle_midpoint(Point center, float r)
     int y = r;
 
     while (x < y) {
-        if (p < 0) p += 2 * x + 3;
+        if (p < 0) p += 2 * x + 3;  
         else --y, p += 2 * (x - y) + 3;
 
         glVertex2i(center_x + x, center_y + y); glVertex2i(center_y + y, center_x + x);
@@ -234,19 +262,25 @@ void Renderer::draw_circle_midpoint(Point center, float r)
 
 void Renderer::draw_elipse_midpoint(Point center, float rx, float ry)
 {
+    // like bresenham, midpoint is an algorithm that use dynamic programming and integer only!
+    // estimated that calculations on floating point take time 
+    //      more than 2 or 3 times in compared with calculation on integer
+    // --> this is a high performance algorithm
+    // read the report.pdf for more details.
+
     // code = 3 
     glBegin(GL_POINTS);
     
     int x = 0, y = ry;
     int64_t rx_squared = rx * rx;
     int64_t ry_squared = ry * ry;
-    int64_t dx = 2 * ry_squared * x;
-    int64_t dy = 2 * rx_squared * y;
+    int64_t dx = 2ll * ry_squared * x;
+    int64_t dy = 2ll * rx_squared * y;
 
     int center_x = center.x();
     int center_y = center.y();
 
-    int64_t d1 = ry_squared - rx_squared * ry + 0.25f * rx_squared;
+    int64_t p1 = ry_squared - rx_squared * ry + 0.25f * rx_squared;
 
     while (dx < dy) {
         glVertex2i(center_x + x, center_y + y);
@@ -254,36 +288,36 @@ void Renderer::draw_elipse_midpoint(Point center, float rx, float ry)
         glVertex2i(center_x - x, center_y + y);
         glVertex2i(center_x - x, center_y - y);
         
-        if (d1 < 0) {
+        if (p1 < 0) {
             dx += 2ll * ry_squared;
-            d1 += dx + ry_squared;
+            p1 += dx + ry_squared;
         }
         else {
             --y;
-            dx += 2ll *     ry_squared;
+            dx += 2ll * ry_squared;
             dy -= 2ll * rx_squared;
-            d1 += dx - dy + ry_squared;
+            p1 += dx - dy + ry_squared;
         }
 
         ++x;
     }
 
-    int64_t d2 = ry_squared * (1.0f * x + 0.5f) * (1.0f * x + 0.5f) + rx_squared * (y - 1) * (y - 1) - rx_squared * ry_squared;
+    int64_t p2 = ry_squared * (1.0f * x + 0.5f) * (1.0f * x + 0.5f) + rx_squared * (y - 1) * (y - 1) - rx_squared * ry_squared;
     while (y >= 0) {
         glVertex2i(center_x + x, center_y + y);
         glVertex2i(center_x + x, center_y - y);
         glVertex2i(center_x - x, center_y + y);
         glVertex2i(center_x - x, center_y - y);
         
-        if (d2 > 0) {
+        if (p2 > 0) {
             dy -= 2ll * rx_squared;
-            d2 += rx_squared - dy;
+            p2 += rx_squared - dy;
         }
         else {
             ++x;
             dx += 2 * ry_squared;
             dy -= 2 * rx_squared;
-            d2 += dx - dy + rx_squared;
+            p2 += dx - dy + rx_squared;
         }
 
         --y;
@@ -304,7 +338,7 @@ void Renderer::draw_parapole_midpoint(Point center, float p)
     int ip = p, sign = 1;
 
     if (ip < 0) sign = -1, ip = -ip;
-    int d = 1 + 2 * ip;
+    int d = 1 - 2 * ip; 
 
     while (x <= 2 * ip) {
         glVertex2i(center_x + x, center_y + y * sign);
@@ -316,8 +350,11 @@ void Renderer::draw_parapole_midpoint(Point center, float p)
 
     d = (2 * ip - 0.5) * (2 * ip - 0.5) - 4 * ip * (ip + 1);
     
+    int limit_width = WINDOW_WIDTH - center_x;
+    int limit_height = WINDOW_HEIGHT - center_y;
+
     if (sign == 1) {
-        while (center_y + y < WINDOW_HEIGHT) {
+        while (y < limit_height && (x < limit_width || center_x >= x)) {
             glVertex2i(center_x + x, center_y + y);
             glVertex2i(center_x - x, center_y + y);
             if (d >= 0) d += -4 * ip;
@@ -326,7 +363,7 @@ void Renderer::draw_parapole_midpoint(Point center, float p)
         }
     }
     else {
-        while (center_y - y >= 0) {
+        while (center_y >= y && (x < limit_width || center_x >= x)) {
             glVertex2i(center_x + x, center_y - y);
             glVertex2i(center_x - x, center_y - y);
             if (d >= 0) d += -4 * ip;
@@ -337,43 +374,85 @@ void Renderer::draw_parapole_midpoint(Point center, float p)
     glEnd();
 }
 
-void Renderer::draw_hyperpole_midpoint(Point center, float rx, float ry)
+void Renderer::draw_hyperpole_midpoint(Point center, float a, float b)
 {
     // code = 5
     glBegin(GL_POINTS);
     
-    
-    int irx = rx;
-    int iry = ry;
+    int ia = a, ib = b;
+    int64_t  b_squared = ib * ib, a_squared = ia * ia;
 
-    int64_t rx_squared = irx * irx;
-    int64_t ry_squared = iry * iry;
+    int x = ia, y = 0;
 
-    int center_x = center.x();
-    int center_y = center.y();
+    int64_t p = b_squared * ia - 3.0 * b_squared / 4;
+    int64_t dx = 2ll * b_squared * ia;
+    int64_t dy = 0;
 
-    int64_t p = ry_squared * (1.0 * irx - 0.5) * (1.0 * irx - 0.5) - rx_squared - rx_squared * ry_squared;
+    int center_x = center.x(), center_y = center.y();
 
-    glVertex2i(center_x, center_y + irx);
-    glVertex2i(center_x, center_y - irx);
+    glVertex2i(center_x + x, center_y);
+    glVertex2i(center_x - x, center_y);
 
-    int x = 1, y = irx;
-    while (center_y + y < WINDOW_HEIGHT || center_y - y >= 0) {
-        
+    int limit_width = WINDOW_WIDTH - center_x;
+    int limit_height = WINDOW_HEIGHT - center_y;
+
+    while (dx > dy && x < limit_width) {
+        ++y; dy += 2ll * a_squared;
+        if (p >= 0) {
+            p -= dy + a_squared;
+        } else {
+            ++x;
+            dx += 2ll * b_squared;
+            p -= dy + a_squared - dx;
+        }
+
         glVertex2i(center_x + x, center_y + y);
         glVertex2i(center_x + x, center_y - y);
         glVertex2i(center_x - x, center_y + y);
         glVertex2i(center_x - x, center_y - y);
-
-        if (p >= 0) p -= rx_squared * (2ll * x + 3);
-        else p += 2ll * ry_squared * y - rx_squared * (2ll * x + 3), ++y;
-        ++x;
     }
 
+    int64_t q = b_squared * (x + 1) * (x + 1) 
+        - a_squared * (1.0 * y + 0.5) * (1.0 * y + 0.5) - a_squared * b_squared;
+
+    while ((x <= center_x || x < limit_width) && (y <= center_y || y < limit_height)) {
+        ++x;
+        dx += 2ll * b_squared;
+        if (q < 0) {
+            q += b_squared + dx;
+        } else {
+            ++y;
+            dy += 2ll * a_squared;
+            q += b_squared + dx - dy;
+        }
+
+        glVertex2i(center_x + x, center_y + y);
+        glVertex2i(center_x + x, center_y - y);
+        glVertex2i(center_x - x, center_y + y);
+        glVertex2i(center_x - x, center_y - y);
+    }
+ 
     glEnd();
 }
 
 ///////////////////////////////////// easycall function //////////////////////////////////////
+
+void Renderer::draw_line_opengl_easycall(std::vector<float> params)
+{
+    cout << "[*][LINE][OPENGL] Input: " << params << endl;
+
+    if (params.size() != 4) {
+        cout << "[ERROR] draw_line_dda method takes 4 argument found " << params.size() << endl;
+        return;
+    }
+
+    Timer timer;
+    glLineWidth(3.0);
+    timer.start();
+    draw_line_opengl({ params[0], params[1] }, { params[2], params[3] });
+    cout << "\t--> Time executed: " << timer.stop() * 1000 << " (ms)" << endl;
+} // code = 0
+
 
 void Renderer::draw_line_dda_easycall(std::vector<float> params)
 {
@@ -408,7 +487,7 @@ void Renderer::draw_circle_midpoint_easycall(std::vector<float> params)
 {
     cout << "[*][CIRCLE][MIDPOINT] Input: " << params << endl;
     if (params.size() != 3) {
-        cout << "[ERROR] draw_circle_midpoint method takes 4 argument found " << params.size() << endl;
+        cout << "[ERROR] draw_circle_midpoint method takes 3 argument found " << params.size() << endl;
         return;
     }
     
@@ -436,7 +515,7 @@ void Renderer::draw_parapole_midpoint_easycall(std::vector<float> params)
 {
     cout << "[*][PARABOLE][MIDPOINT] Input: " << params << endl;
     if (params.size() != 3) {
-        cout << "[ERROR] draw_parapole_midpoint method takes 4 argument found " << params.size() << endl;
+        cout << "[ERROR] draw_parapole_midpoint method takes 3 argument found " << params.size() << endl;
         return;
     }
     
@@ -469,7 +548,7 @@ void set_pixel(GLint x, GLint y)
 
 void Renderer::glut_initialize(char** args, int agrs_count) {
     glutInit(&agrs_count, args);
-    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    glutInitWindowSize(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
     glutCreateWindow("Student 20120057 - Lab 01");
     glClearColor(1.0, 1.0, 1.0, 0.0);
     glMatrixMode(GL_PROJECTION);
