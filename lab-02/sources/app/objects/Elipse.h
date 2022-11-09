@@ -12,8 +12,6 @@ public:
 	virtual ~Elipse();
 	virtual void render();
 	virtual bool contain(const Point&);
-	virtual void fill(const Color&);
-
 
 protected:
 	Point m_center;

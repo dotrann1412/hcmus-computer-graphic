@@ -4,7 +4,8 @@ compiler = g++
 cflag = -c -std=c++2a
 gllib = -lglut -lGLU -lGL
 fslib = -lstdc++fs
-exec = ../release/20120057
+execlib = -ltbb
+exec = ../release/linux/20120057
 
 all_objects = ../release/string_tokenizer.o ../release/main.o \
 	../release/utils.o ../release/Point.o ../release/path.o \
@@ -61,7 +62,7 @@ all_objects = ../release/string_tokenizer.o ../release/main.o \
 
 ../release/renderer.o: ./app/utils/renderer.cpp
 	echo Compiling renderer...
-	$(compiler) $(cflag) -o ../release/renderer.o ./app/utils/renderer.cpp $(fslib)
+	$(compiler) $(cflag)  $(fslib)  -o ../release/renderer.o ./app/utils/renderer.cpp 
 
 ../release/path.o: ./app/utils/path.cpp
 	echo Compiling path utils...
@@ -69,18 +70,18 @@ all_objects = ../release/string_tokenizer.o ../release/main.o \
 
 ../release/main.o: ./app/main.cpp
 	echo Compiling entry point...
-	$(compiler) $(cflag) -o ../release/main.o ./app/main.cpp $(gllib) $(fslib)
+	$(compiler) $(cflag) $(gllib) $(fslib)  -o ../release/main.o ./app/main.cpp 
 
 ../release/Line.o: ./app/objects/Line.cpp
 	echo Compiling line object...
 	$(compiler) $(cflag) -o ../release/Line.o ./app/objects/Line.cpp $(gllib) $(fslib)
 
 clean:
-	rm -rf ../release/*.o
+	rm -rf $(all_objects)
 
 all: $(all_objects)
-	echo Compiling App...
-	$(compiler) -o $(exec) $(all_objects) $(gllib) $(fslib) -std=c++17
+	echo Linking...
+	$(compiler) -o $(exec) $(all_objects) $(gllib) $(fslib)    -std=c++17
 	echo App compiled.
 
 test: all

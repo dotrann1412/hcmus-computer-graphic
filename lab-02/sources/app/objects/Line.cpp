@@ -19,11 +19,11 @@ Line::~Line() {
 
 }
 
-Point Line::getStartingPoint() {
+Point Line::getStartingPoint() const {
 	return this->m_start;
 }
 
-Point Line::getEndingPoint() {
+Point Line::getEndingPoint() const {
 	return this->m_end;
 }
 
@@ -53,6 +53,7 @@ void Line::render() {
     glEnd();
 }
 
-bool Line::contain(const Point& point) {
-	return abs((point.x() - m_start.x()) * (m_end.y() - m_start.y()) - (m_end.x() - m_start.x()) * (point.y() - m_start.y())) < 2; 
+bool Line::contain(const Point& pts) {
+	const static float K = 1;
+	return Shape::contain(pts) && abs(pts.x() - m_start.x()) * (m_end.y() - m_start.y()) - (pts.y() - m_start.y()) * (m_end.y() - m_start.y()) < K;
 }

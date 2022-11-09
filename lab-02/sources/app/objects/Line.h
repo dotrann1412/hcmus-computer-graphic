@@ -36,9 +36,9 @@ public:
 
 	std::string to_string() const;
 
-	Point getStartingPoint();
+	Point getStartingPoint() const;
 
-	Point getEndingPoint();
+	Point getEndingPoint() const;
 
 	void setStartingPoint(Point);
 

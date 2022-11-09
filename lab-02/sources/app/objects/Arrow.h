@@ -5,7 +5,11 @@
 
 class Arrow: public Shape
 {
-
+public:
+	Arrow();
+	Arrow(const Arrow& another);
+	void render();
+	bool contain(const Point& );
 };
 
 #endif // __ARROW_H__

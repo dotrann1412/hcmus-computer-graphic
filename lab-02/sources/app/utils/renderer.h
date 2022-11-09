@@ -40,42 +40,12 @@ public:
 
     static void display();
 
-public: // algorithms
-    
-    static void draw_line_dda(Point, Point); // code = 0
-
-    static void draw_line_bresenham(Point, Point); // code = 1
-
-    static void draw_circle_midpoint(Point, float); // code = 2
-
-    static void draw_elipse_midpoint(Point, float, float); // code = 3 
-
-    static void draw_parapole_midpoint(Point, float); // code = 4
-
-    static void draw_hyperpole_midpoint(Point, float, float); // code = 5
-
-    static void draw_line_opengl(Point, Point); // code = -1
-
-public: // easy call
-
-    static void draw_line_dda_easycall(std::vector<float>); // code = 0
-
-    static void draw_line_bresenham_easycall(std::vector<float>); // code = 1
-
-    static void draw_circle_midpoint_easycall(std::vector<float>); // code = 2
-
-    static void draw_elipse_midpoint_easycall(std::vector<float>); // code = 3 
-
-    static void draw_parapole_midpoint_easycall(std::vector<float>); // code = 4
-
-    static void draw_hyperpole_midpoint_easycall(std::vector<float>); // code = 5
-
-    static void draw_line_opengl_easycall(std::vector<float>); // code = -1 
-
 public: // utils function
     static int glut_initialize(char** args, int args_count);
 
     static void add_obj(const std::string&);
+
+    static void onResize(int width, int height);
 };
 
 #endif // 

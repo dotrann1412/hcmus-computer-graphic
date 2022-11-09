@@ -11,7 +11,6 @@ public:
 	~Rectangle() {};
 	virtual void render();
 	virtual bool contain(const Point&);
-	void fill(const Color&);
 };
 
 #endif // __RECTANGLE_H__

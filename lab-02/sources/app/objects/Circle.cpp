@@ -12,6 +12,7 @@ Circle::Circle(const Circle& another)
 
 void Circle::render() {
 	glBegin(GL_POINTS);
+    glColor3ui(m_color.R, m_color.G, m_color.B);
 
     int center_x = m_center.x(); // move here for faster computing
     int center_y = m_center.y();
@@ -45,5 +46,5 @@ void Circle::render() {
 }
 
 bool Circle::contain(const Point& pts) {
-	return true;
+	return (pts.x() - m_center.x()) * (pts.x() - m_center.x()) + (pts.y() - m_center.y()) * (pts.y() - m_center.y()) <= m_a * m_a;
 }

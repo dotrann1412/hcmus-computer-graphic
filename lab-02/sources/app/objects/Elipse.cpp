@@ -18,7 +18,7 @@ Elipse::~Elipse() {
 
 void Elipse::render() {
 	glBegin(GL_POINTS);
-    
+    glColor3ui(m_color.R, m_color.G, m_color.B);  
     int x = 0, y = m_b;
     int64_t m_a_squared = m_a * m_a;
     int64_t m_b_squared = m_b * m_b;
@@ -75,6 +75,6 @@ void Elipse::render() {
 }
 
 
-bool Elipse::contain(const Point& ) {
-	return true;
+bool Elipse::contain(const Point& pts) {
+	return (pts.x() - m_center.x()) * (pts.x() - m_center.x()) * (m_b * m_b)+ (pts.y() - m_center.y()) * (pts.y() - m_center.y()) *  (m_a * m_a)  <=  (m_a * m_a) *  (m_b * m_b);
 }

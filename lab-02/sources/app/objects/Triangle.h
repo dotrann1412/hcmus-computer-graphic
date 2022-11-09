@@ -10,7 +10,6 @@ public:
 	Triangle(const Triangle& );
 	void render();
 	bool contain(const Point&);
-	void fill(const Color&);
 };
 
 #endif // __TRIANGLE_H__

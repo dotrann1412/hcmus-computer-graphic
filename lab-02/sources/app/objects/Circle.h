@@ -13,7 +13,6 @@ public:
 
 	void render();
 	bool contain(const Point& );
-	void fill(const Color&);
 };
 
 #endif // __CIRCLE_H__
