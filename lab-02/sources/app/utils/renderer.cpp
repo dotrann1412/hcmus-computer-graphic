@@ -1,5 +1,4 @@
 #pragma warning (disable : 26451)
-#endif // turn off integer overflow warning while devleoped in visual studio
 
 #include "renderer.h"
 #include "path.h"
@@ -26,17 +25,7 @@ const float Renderer::ks_point_size = 1.0;
 
 const Color Renderer::ks_default_color = Color::BLACK;
 
-std::vector<std::function<void(std::vector<float>)>> Renderer::k_workers;
-
-std::vector<std::vector<float>> Renderer::k_parameters;
-
-const std::map<int, std::function<void(std::vector<float>)>> Renderer::function_mapping = {
-
-};
-
-const std::map<int, std::string> Renderer::window_title_mapping = {
-
-};
+std::vector<std::vector<Pixel>> Renderer::k_color_map;
 
 #include "../objects/all.h"
 void Renderer::display() 
@@ -66,70 +55,6 @@ void Renderer::display()
     glFlush();
 }
 
-void Renderer::add_obj(const std::string& line)
-{
-    stringstream ss(line);
-    int code = 0;
-    ss >> code;
-
-    auto iter = Renderer::function_mapping.find(code);        
-    if (iter != Renderer::function_mapping.end()) {
-        vector<float> params;
-        
-        for (float x; ss >> x
-            ; params.push_back(x));
-        
-        k_workers.push_back(iter->second);
-        k_parameters.push_back(params);
-    }
-}
-
-void Renderer::render(char** args, int argcnt) 
-{
-    // run with files
-    if (argcnt > 2 && string(args[1]) == "-f") {
-        string filepath = args[2];
-        
-        if (!Path::exists(filepath) || !Path::isFile(filepath)) {
-            cout << "[*][ERROR] Program is running with wrong format of parameters, try again!" << '\n';
-            return;
-        }
-
-        fstream ff(filepath, std::ios::in);
-        
-        for (std::string buffer; getline(ff, buffer)
-            ; Renderer::add_obj(buffer));
-    }
-    else {
-         // run with parameters
-        bool valid = true;
-        for (int i = 2; i < argcnt && valid
-            ; valid = isFloat(args[i++]));
-
-        valid = valid && argcnt >= 2 && isInt(args[1]);
-
-        if (!valid) {
-            cout << "[*][ERROR] Program is running with wrong format of parameters, try again!" << '\n';
-            return;
-        }
-
-        int code = stoi(args[1]);
-        vector<float> params(argcnt - 2);
-        for (int i = 0; i < argcnt - 2; ++i) {
-            params[i] = stof(args[i + 2]);
-        }
-
-        auto iter = function_mapping.find(code);
-        if (iter != function_mapping.end()) {
-            k_workers.push_back(iter->second);
-            k_parameters.push_back(params);
-        }
-    }
-
-    glut_initialize(args, argcnt);
-    glutDisplayFunc(Renderer::display);
-    glutMainLoop();
-}
 
 void set_pixel(GLint x, GLint y)
 {
@@ -146,10 +71,71 @@ int Renderer::glut_initialize(char** args, int agrs_count) {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0.0, Renderer::WINDOW_WIDTH, 0.0, Renderer::WINDOW_HEIGHT);
+    k_color_map.assign(Renderer::WINDOW_WIDTH, std::vector<Pixel>(Renderer::WINDOW_WIDTH));
     return id;
 }
 
-void Renderer::onResize(int w, int h) {
-    std::cerr << "[WINDOWS]\t" << "Reshape" << '\n';
-    // glutReshapeWindow(Renderer::WINDOW_WIDTH, Renderer::WINDOW_HEIGHT);
+void Renderer::draw_line_bresenham(const Point& first, const Point& last, const Color& color, const int& id)
+{
+    // this algorithm just uses integers for all the calculating processed.
+    // read the report.pdf for more details.
+
+    if (first > last)
+        swap(first, last);
+    
+    int dx = last.x() - first.x();
+    int dy = last.y() - first.y();
+    
+    bool is_negative_slope = false;
+    if (dy < 0) dy = -dy, is_negative_slope = true;
+
+    Pixel pix = {color.R, color.G, color.B, id};
+
+    glBegin(GL_POINTS);
+    
+    if (dx > dy) {
+        int p = 2 * dy - dx;
+        const int A = 2 * dy;
+        const int B = 2 * (dy - dx);
+
+        int interval = 1;
+        if (is_negative_slope) interval = -1;
+        
+        for (int x = first.x(), y = first.y(); x <= last.x(); ++x) {
+            if (p <= 0) p += A;
+            else p += B, y += interval;
+            glVertex2i(x, y);
+            k_color_map[x][y] = pix;
+        }
+    }
+    else {
+        int p = 2 * dx - dy;
+        const int A = 2 * dx;
+        const int B = 2 * (dx - dy);
+
+        int interval = 1;
+        if (is_negative_slope) interval = -1;
+
+        for (int x = first.x(), y = first.y(); y != last.y() + interval; y += interval) {
+            if (p <= 0) p += A;
+            else p += B, ++x;
+            glVertex2i(x, y);
+            k_color_map[x][y] = pix;
+        }
+    }
+
+    glEnd();
+    glFlush();
+}
+
+void Renderer::setPixelCallback(const int& x, const int& y, const Pixel& pixel)
+{
+    k_color_map[x][y] = pixel;
+}
+
+void Renderer::push(const int& x, const int& y)
+{
+    glBegin(GL_POINTS);
+    glVertex2i(x, y);
+    glEnd();
 }

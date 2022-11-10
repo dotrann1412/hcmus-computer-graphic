@@ -10,17 +10,19 @@ Circle::Circle(const Circle& another)
 
 }
 
-void Circle::render() {
+void Circle::render(bool fill, std::function<void(const int&, const int&, const Pixel&)> setPixelCallback) {
 	glBegin(GL_POINTS);
     glColor3ui(m_color.R, m_color.G, m_color.B);
 
     int center_x = m_center.x(); // move here for faster computing
     int center_y = m_center.y();
 
-    glVertex2i(center_x, center_y + m_a);
-    glVertex2i(center_x, center_y - m_a);
-    glVertex2i(center_x - m_a, center_y);
-    glVertex2i(center_x + m_a, center_y);
+    Pixel pix = {m_boundaryColor.R, m_boundaryColor.G, m_boundaryColor.B, m_id};
+
+    setPixelCallback(center_x, center_y + m_a, pix);
+    setPixelCallback(center_x, center_y - m_a, pix);
+    setPixelCallback(center_x - m_a, center_y, pix);
+    setPixelCallback(center_x + m_a, center_y, pix);
 
     int p = 1 - m_a;
     int x = 1;
@@ -30,14 +32,14 @@ void Circle::render() {
         if (p < 0) p += 2 * x + 3;  
         else --y, p += 2 * (x - y) + 3;
 
-        glVertex2i(center_x + x, center_y + y); 
-        glVertex2i(center_y + y, center_x + x);
-        glVertex2i(center_x + x, center_y - y); 
-        glVertex2i(center_y + y, center_x - x);
-        glVertex2i(center_x - x, center_y + y); 
-        glVertex2i(center_y - y, center_x + x);
-        glVertex2i(center_x - x, center_y - y); 
-        glVertex2i(center_y - y, center_x - x);
+        setPixelCallback(center_x + x, center_y + y, pix); 
+        setPixelCallback(center_y + y, center_x + x, pix);
+        setPixelCallback(center_x + x, center_y - y, pix); 
+        setPixelCallback(center_y + y, center_x - x, pix);
+        setPixelCallback(center_x - x, center_y + y, pix); 
+        setPixelCallback(center_y - y, center_x + x, pix);
+        setPixelCallback(center_x - x, center_y - y, pix); 
+        setPixelCallback(center_y - y, center_x - x, pix);
 
         ++x;
     }

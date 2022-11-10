@@ -11,7 +11,7 @@ public:
 
 	~Circle() {};
 
-	void render();
+	void render(bool fill, std::function<void(const int&, const int&, const Pixel&)>);
 	bool contain(const Point& );
 };
 

@@ -12,8 +12,11 @@ all_objects = ../release/string_tokenizer.o ../release/main.o \
 	../release/timer.o ../release/Color.o ../release/renderer.o \
 	../release/screen.o ../release/Line.o ../release/Shape.o \
 	../release/Arrow.o ../release/Circle.o ../release/Elipse.o \
-	../release/Rectangle.o ../release/Square.o ../release/Triangle.o
+	../release/Rectangle.o ../release/Square.o ../release/Triangle.o \
+	../release/Pixel.o
 
+../release/Pixel.o: ./app/objects/Pixel.cpp
+	$(compiler) $(cflag) -o ../release/Pixel.o ./app/objects/Pixel.cpp
 
 ../release/Shape.o: ./app/objects/Shape.cpp
 	$(compiler) $(cflag) -o ../release/Shape.o ./app/objects/Shape.cpp

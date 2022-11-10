@@ -14,19 +14,12 @@
 
 #include "../objects/Color.h"
 #include "../objects/Point.h"
+#include "../objects/Pixel.h"
 
 // this static class is used to avoid global var using 
 class Renderer
 {
-private:
-    static std::vector<std::function<void(std::vector<float>)>> k_workers;
-
-    static std::vector<std::vector<float>> k_parameters;
-
-    static const std::map<int, std::function<void(std::vector<float>)>> function_mapping;
-
-    static const std::map<int, std::string> window_title_mapping;
-
+public: // utils function
     static const float ks_point_size;
 
     static const Color ks_default_color;
@@ -35,17 +28,16 @@ private:
     
     static const int WINDOW_WIDTH;
 
-public:
-    static void render(char**, int);
-
     static void display();
 
-public: // utils function
     static int glut_initialize(char** args, int args_count);
 
-    static void add_obj(const std::string&);
+    static void draw_line_bresenham(const Point& first, const Point& last, const Color& color, const int& id = 0);
 
-    static void onResize(int width, int height);
+    static void setPixelCallback(const int& x, const int& t, const Pixel& color);
+
+private:
+    static std::vector<std::vector<Pixel>> k_color_map;
 };
 
 #endif // 

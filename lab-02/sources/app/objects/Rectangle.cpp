@@ -11,17 +11,15 @@ Rectangle::Rectangle(const Rectangle& another)
 
 };
 
-void Rectangle::render()
+void Rectangle::render(bool iz_fill, std::function<void(const int&, const int&, const Pixel&)> setPixelCallback)
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glColor3ui(m_color.R, m_color.G, m_color.B);  
-	glLineWidth(1.0);
-	glBegin(GL_POLYGON);
-		glVertex2f(m_bottomLeft.x(), m_bottomLeft.y());
-		glVertex2f(m_bottomLeft.x(), m_topRight.y());
-		glVertex2f(m_topRight.x(), m_topRight.y());
-		glVertex2f(m_topRight.x(), m_bottomLeft.y());
-	glEnd();
+	Point topLeft = {m_bottomLeft.x(), m_topRight.y()}, bottomRight = {m_topRight.x(), m_bottomLeft.y()};
+	Shape::bresenham(m_bottomLeft, topLeft, m_boundaryColor, setPixelCallback);
+	Shape::bresenham(topLeft, m_topRight, m_boundaryColor, setPixelCallback);
+	Shape::bresenham(m_topRight, bottomRight, m_boundaryColor, setPixelCallback);
+	Shape::bresenham(bottomRight, m_bottomLeft, m_boundaryColor, setPixelCallback);
+	if (fill) 
+		boundary_fill();
 }
 
 bool Rectangle::contain(const Point& point) {

@@ -16,7 +16,7 @@ Elipse::~Elipse() {
 
 }
 
-void Elipse::render() {
+void Elipse::render(bool fill, std::function<void(const int&, const int&, const Pixel&)> setPixelCallback) {
 	glBegin(GL_POINTS);
     glColor3ui(m_color.R, m_color.G, m_color.B);  
     int x = 0, y = m_b;
@@ -30,11 +30,12 @@ void Elipse::render() {
 
     int64_t p1 = m_b_squared - m_a_squared * m_b + 0.25f * m_a_squared;
 
+    Pixel pix = {m_boundaryColor.R, m_boundaryColor.G, m_boundaryColor.B, id};
     while (dx < dy) {
-        glVertex2i(center_x + x, center_y + y);
-        glVertex2i(center_x + x, center_y - y);
-        glVertex2i(center_x - x, center_y + y);
-        glVertex2i(center_x - x, center_y - y);
+        setPixelCallback(center_x + x, center_y + y, pix);
+        setPixelCallback(center_x + x, center_y - y, pix);
+        setPixelCallback(center_x - x, center_y + y, pix);
+        setPixelCallback(center_x - x, center_y - y, pix);
         
         if (p1 < 0) {
             dx += 2ll * m_b_squared;
@@ -52,10 +53,10 @@ void Elipse::render() {
 
     int64_t p2 = m_b_squared * (1.0f * x + 0.5f) * (1.0f * x + 0.5f) + m_a_squared * (y - 1) * (y - 1) - m_a_squared * m_b_squared;
     while (y >= 0) {
-        glVertex2i(center_x + x, center_y + y);
-        glVertex2i(center_x + x, center_y - y);
-        glVertex2i(center_x - x, center_y + y);
-        glVertex2i(center_x - x, center_y - y);
+        setPixelCallback(center_x + x, center_y + y, pix);
+        setPixelCallback(center_x + x, center_y - y, pix);
+        setPixelCallback(center_x - x, center_y + y, pix);
+        setPixelCallback(center_x - x, center_y - y, pix);
         
         if (p2 > 0) {
             dy -= 2ll * m_a_squared;
@@ -71,7 +72,8 @@ void Elipse::render() {
         --y;
     }
 
-    glEnd();
+    if (fill)
+        boundary_fill();
 }
 
 

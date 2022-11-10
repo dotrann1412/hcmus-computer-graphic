@@ -12,7 +12,7 @@ class Point
 {
 private:
 	//x_pos and y_pos
-	float m_x, m_y;
+	int32_t m_x, m_y;
 	//i dont think declare this attribute as public attribute
 	//what about if user do: Point::objCount = 1000000 ?
 	//->not safe
@@ -20,7 +20,7 @@ private:
 public:
 	//constructors
 	Point();
-	Point(const float&, const float&);
+	Point(const int32_t&, const int32_t&);
 	Point(const Point&);
 
 	//destructor
@@ -28,13 +28,13 @@ public:
 
 public:
 	//getter
-	float x() const;
-	float y() const;
+	int32_t x() const;
+	int32_t y() const;
 
 public:
 	//setter
-	void setx(const float&);
-	void sety(const float&);
+	void setx(const int32_t&);
+	void sety(const int32_t&);
 
 public:
 	//return distance between 2 pts

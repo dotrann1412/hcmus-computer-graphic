@@ -10,7 +10,7 @@ public:
 	Elipse(const Elipse&);
 	
 	virtual ~Elipse();
-	virtual void render();
+	virtual void render(bool fill, std::function<void(const int&, const int&, const Pixel&)>);
 	virtual bool contain(const Point&);
 
 protected:

@@ -18,7 +18,7 @@ Point::Point() {
 	++Point::k_obj_count;
 }
 
-Point::Point(const float& x, const float& y) {
+Point::Point(const int32_t& x, const int32_t& y) {
 	this->m_x = x;
 	this->m_y = y;
 	++Point::k_obj_count;
@@ -30,19 +30,19 @@ Point::Point(const Point& other) {
 	++Point::k_obj_count;
 }
 
-float Point::x() const {
+int32_t Point::x() const {
 	return this->m_x;
 }
 
-float Point::y() const {
+int32_t Point::y() const {
 	return this->m_y;
 }
 
-void Point::setx(const float& x) {
+void Point::setx(const int32_t& x) {
 	this->m_x = x;
 }
 
-void Point::sety(const float& y) {
+void Point::sety(const int32_t& y) {
 	this->m_y = y;
 }
 

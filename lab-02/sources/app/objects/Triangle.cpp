@@ -7,7 +7,6 @@ Triangle::Triangle(const Point& rect_start, const Point& rect_end)
 
 }
 
-
 Triangle::Triangle(const Triangle& another) 
 	: Shape(another) {
 
