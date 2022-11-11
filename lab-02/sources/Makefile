@@ -5,18 +5,16 @@ cflag = -c -std=c++2a
 gllib = -lglut -lGLU -lGL
 fslib = -lstdc++fs
 execlib = -ltbb
+use_async = -lpthread
+
 exec = ../release/linux/20120057
 
-all_objects = ../release/string_tokenizer.o ../release/main.o \
+all_objects = ../release/main.o \
 	../release/utils.o ../release/Point.o ../release/path.o \
-	../release/timer.o ../release/Color.o ../release/renderer.o \
+	../release/timer.o ../release/Color.o \
 	../release/screen.o ../release/Line.o ../release/Shape.o \
 	../release/Arrow.o ../release/Circle.o ../release/Elipse.o \
-	../release/Rectangle.o ../release/Square.o ../release/Triangle.o \
-	../release/Pixel.o
-
-../release/Pixel.o: ./app/objects/Pixel.cpp
-	$(compiler) $(cflag) -o ../release/Pixel.o ./app/objects/Pixel.cpp
+	../release/Rectangle.o ../release/Square.o ../release/Triangle.o
 
 ../release/Shape.o: ./app/objects/Shape.cpp
 	$(compiler) $(cflag) -o ../release/Shape.o ./app/objects/Shape.cpp
@@ -41,11 +39,7 @@ all_objects = ../release/string_tokenizer.o ../release/main.o \
 
 ../release/screen.o: ./app/utils/screen.cpp
 	echo Compiling screen handler...
-	$(compiler) $(cflag) -o ../release/screen.o ./app/utils/screen.cpp
-
-../release/string_tokenizer.o: ./app/utils/string_tokenizer.cpp
-	echo Compiling string tokenizer...
-	$(compiler) $(cflag) -o ../release/string_tokenizer.o ./app/utils/string_tokenizer.cpp
+	$(compiler) $(cflag) -o ../release/screen.o ./app/utils/screen.cpp $(use_async)
 
 ../release/Point.o: ./app/objects/Point.cpp
 	echo Compiling point object...
@@ -63,10 +57,6 @@ all_objects = ../release/string_tokenizer.o ../release/main.o \
 	echo Compiling timer...
 	$(compiler) $(cflag) -o ../release/timer.o ./app/utils/timer.cpp 
 
-../release/renderer.o: ./app/utils/renderer.cpp
-	echo Compiling renderer...
-	$(compiler) $(cflag)  $(fslib)  -o ../release/renderer.o ./app/utils/renderer.cpp 
-
 ../release/path.o: ./app/utils/path.cpp
 	echo Compiling path utils...
 	$(compiler) $(cflag) -o ../release/path.o ./app/utils/path.cpp 
@@ -82,12 +72,13 @@ all_objects = ../release/string_tokenizer.o ../release/main.o \
 clean:
 	rm -rf $(all_objects)
 
-all: $(all_objects)
-	echo Linking...
-	$(compiler) -o $(exec) $(all_objects) $(gllib) $(fslib)    -std=c++17
+$(exec): $(all_objects)
+	$(compiler) -o $(exec) $(all_objects) $(gllib) $(fslib) -std=c++17  $(use_async)
+	
+all: $(exec)
 	echo App compiled.
 
-test: all
+test: all $(exec)
 	echo App running...
 	$(exec)
 
