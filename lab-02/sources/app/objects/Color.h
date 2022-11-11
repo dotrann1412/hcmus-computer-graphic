@@ -27,6 +27,8 @@ public:
 	bool operator == (const Color& another) const;
 	bool operator != (const Color& another) const;
 
+	Color& operator = (const Color& color);
+
 	friend std::ostream &operator << (std::ostream &s, const Color &a) {
 		s << a.R << ' ' << a.G << ' ' << a.B;
 		return s;

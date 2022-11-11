@@ -46,11 +46,12 @@ float Line::length() const {
 	return sqrt(pow(changeX, 2) + pow(changeY, 2));
 }
 
-void Line::render() {
-	glBegin(GL_LINES);
-        glVertex2f(m_start.x(), m_start.y());
-        glVertex2f(m_end.x(), m_end.y());
-    glEnd();
+void Line::render() const {
+	Shape::bresenham(m_start, m_end);
+}
+
+void Line::unbound() {
+	Shape::bresenham_rev(m_start, m_end);
 }
 
 bool Line::contain(const Point& pts) {

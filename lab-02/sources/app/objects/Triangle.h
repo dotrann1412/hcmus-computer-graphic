@@ -6,10 +6,11 @@
 class Triangle: public Shape
 {
 public:
-	Triangle(const Point& rect_start, const Point& rect_end);
+	Triangle(const Point& rect_start, const Point& rect_end,  const Color& boundary_color = Color::BLACK, const Color& fill_color = Color::WHITE);
 	Triangle(const Triangle& );
-	void render();
+	void render() const;
 	bool contain(const Point&);
+	void unbound();
 };
 
 #endif // __TRIANGLE_H__

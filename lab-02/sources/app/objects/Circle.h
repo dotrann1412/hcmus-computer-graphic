@@ -6,13 +6,16 @@
 class Circle: public Elipse
 {
 public:
-	Circle(const Point& rect_start, const Point& rect_end);
+	Circle(const Point& rect_start, const Point& rect_end,  const Color& boundary_color = Color::BLACK, const Color& fill_color = Color::WHITE);
+	
 	Circle(const Circle&);
 
 	~Circle() {};
 
-	void render(bool fill, std::function<void(const int&, const int&, const Pixel&)>);
+	void render() const;
 	bool contain(const Point& );
+	void unbound();
+	void setBoundary(const Point&, const Point& );
 };
 
 #endif // __CIRCLE_H__

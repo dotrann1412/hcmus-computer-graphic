@@ -26,9 +26,9 @@ public:
 	~Line();
 
 public:
-	void render();
-
+	void render() const;
 	bool contain(const Point& point);
+	void unbound();
 
 public:
 	//return euclid distance between starting and ending point

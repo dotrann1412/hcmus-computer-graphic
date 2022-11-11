@@ -2,8 +2,8 @@
 #include "Line.h"
 #include <vector>
 
-Triangle::Triangle(const Point& rect_start, const Point& rect_end) 
-	: Shape(rect_start, rect_end) {
+Triangle::Triangle(const Point& rect_start, const Point& rect_end, const Color& boundary_color, const Color& fill_color) 
+	: Shape(rect_start, rect_end, boundary_color, fill_color) {
 
 }
 
@@ -12,21 +12,28 @@ Triangle::Triangle(const Triangle& another)
 
 }
 
-void Triangle::render() {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glColor3ui(m_color.R, m_color.G, m_color.B);  
-	glLineWidth(3.0);
-	glBegin(GL_POLYGON);
-		glVertex2f(m_bottomLeft.x(), m_bottomLeft.y());
-		glVertex2f((m_bottomLeft.x() + m_topRight.x()) / 2, m_topRight.y());
-		glVertex2f(m_topRight.x(), m_bottomLeft.y());
-	glEnd();
+void Triangle::render() const {
+	Point top = {(m_bottomLeft.x() + m_topRight.x()) / 2, m_topRight.y()};
+	
+	bresenham(m_bottomLeft, top);
+	bresenham(top, {m_topRight.x(), m_bottomLeft.y()});
+	bresenham(m_bottomLeft, {m_topRight.x(), m_bottomLeft.y()});
+
+	if (m_fillColor != Color::WHITE)
+		boundary_fill();
+}
+
+void Triangle::unbound() {
+	Point top = {(m_bottomLeft.x() + m_topRight.x()) / 2, m_topRight.y()};
+	bresenham_rev(m_bottomLeft, top);
+	bresenham_rev(top, {m_topRight.x(), m_bottomLeft.y()});
+	bresenham_rev(m_bottomLeft, {m_topRight.x(), m_bottomLeft.y()});
 }
 
 bool Triangle::contain(const Point& pts) {
 	auto intersect = [] (const Line& line, const Point& trickly)-> bool {
-		float y1 = line.getStartingPoint().y(), y2 = line.getEndingPoint().y();
-		float x1 = line.getStartingPoint().x(), x2 = line.getEndingPoint().x();
+		int32_t y1 = line.getStartingPoint().y(), y2 = line.getEndingPoint().y();
+		int32_t x1 = line.getStartingPoint().x(), x2 = line.getEndingPoint().x();
 		float k = (trickly.y() - y1) / (y2 - y1);
 
 		if (k < 0 || k > 1)

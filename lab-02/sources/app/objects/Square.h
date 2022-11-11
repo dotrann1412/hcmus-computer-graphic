@@ -6,8 +6,9 @@
 class Square: public Rectangle
 {
 public:
-	Square(const Point& rect_start, const Point& rect_end);
+	Square(const Point& rect_start, const Point& rect_end,  const Color& boundary_color = Color::BLACK, const Color& fill_color = Color::WHITE);
 	Square(const Square& another);
+	void setBoundary(const Point& first, const Point& last);
 };
 
 #endif // __SQUARE_H__

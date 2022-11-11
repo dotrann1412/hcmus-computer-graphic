@@ -4,8 +4,6 @@
 #include <iomanip>
 #include <math.h>
 
-#include "../utils/string_tokenizer.h"
-
 int Point::k_obj_count = 0;
 
 int Point::instance_count() {
@@ -76,45 +74,6 @@ Point::~Point() {
 	--Point::k_obj_count;
 }
 
-Point* Point::parse(std::string s) {
-	stringstream ss;
-	ss << StringTokenizer::remove(s, ' ');
-
-	string _num;
-	getline(ss, _num, '(');
-	Point* a = new Point;
-	
-	getline(ss, _num, ',');
-	a->setx(stoi(_num));
-	ss >> a->m_y;
-
-	return a;
-}
-
-Point* Point::try_parse(std::string s) {
-	Point* a = new Point;
-	try {
-		stringstream ss;
-
-		if(StringTokenizer::parse(s, ",").size() != 2)
-			throw "?";
-
-		ss << StringTokenizer::remove(s, ' ');
-
-		string _num;
-		getline(ss, _num, '(');
-		getline(ss, _num, ',');
-		a->setx(stoi(_num));
-		getline(ss, _num, ')');
-		a->sety(stoi(_num));
-
-	} catch (const void*) {
-		delete a;
-		return nullptr;
-	}
-	
-	return a;
-}
 
 bool Point::operator > (const Point& another) {
 	return m_x != another.m_x ? m_x > another.m_x : m_y > another.m_y;

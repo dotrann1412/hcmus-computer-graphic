@@ -6,12 +6,18 @@
 class Elipse: public Shape
 {
 public:
-	Elipse(const Point& rect_start, const Point& rect_end);
+	Elipse(const Point& rect_start, const Point& rect_end,  
+		const Color& boundary_color = Color::BLACK, const Color& fill_color = Color::WHITE
+	);
+	
 	Elipse(const Elipse&);
 	
 	virtual ~Elipse();
-	virtual void render(bool fill, std::function<void(const int&, const int&, const Pixel&)>);
+
+	virtual void render() const;
 	virtual bool contain(const Point&);
+	virtual void unbound();
+	virtual void setBoundary(const Point& first, const Point& second);
 
 protected:
 	Point m_center;

@@ -11,9 +11,7 @@ Shape::Shape(const Point& rect_start, const Point& rect_end, const Color& bounda
 	m_topRight = {std::max(rect_start.x(), rect_end.x()), std::max(rect_start.y(), rect_end.y())};
 	m_boundaryColor = boundary_colr;
     m_fillColor = fill_color;
-    do {
-        m_id = rand() % 256;
-    } while (k_idMarker.find(m_id) != k_idMarker.end());
+    m_id = k_idMarker.size() + 1;
     k_idMarker[m_id] = true;
 }
 
@@ -25,6 +23,7 @@ Shape::Shape(const Shape& another) {
 }
 
 Shape::~Shape() {
+    unbound();
     k_idMarker.erase(m_id);
 }
 
@@ -38,60 +37,47 @@ void Shape::boundary_fill() const {
 	static int dy[] = {0, 0, 1, -1};
     
     Point t_center = center();
-    std::queue<std::pair<int, int>> que;
-    
-    struct Pack {
-        int R, G, B;
-        Pack(int _R, int _G, int _B): R(_R), G(_G), B(_B) {}
-        Pack(): R(255), G(255), B(255) {}
-        bool operator != (Pack another) {
-            return !(*this == another);
-        }
+    int x_offset = m_bottomLeft.x();
+    int y_offset = m_bottomLeft.y();
 
-        bool operator == (Pack another) {
-            return R == another.R && G == another.G && B == another.B;
-        }
-    };
+    if (k_borderID[t_center.x()][t_center.y()] == m_id)
+        return;
+
+    std::queue<std::pair<int, int>> que;
 
     int frame_width = m_topRight.x() + 1 - m_bottomLeft.x();
     int frame_height = m_topRight.y() + 1 - m_bottomLeft.y();
     
-    int x_offset = m_bottomLeft.x();
-    int y_offset = m_bottomLeft.y();
-
-    std::vector<std::vector<Pack>> color_map(frame_width, std::vector<Pack>(frame_height)); 
-
-    Pack boundary_color = {m_fillColor.R, m_fillColor.G, m_fillColor.B},
-        boundary = {m_boundaryColor.R, m_boundaryColor.G, m_boundaryColor.B};
+    std::vector<std::vector<uint8_t>> color_map(frame_width, std::vector<uint8_t>(frame_height, 0)); 
 
     glColor3ub(m_fillColor.R, m_fillColor.G, m_fillColor.B);
     glBegin(GL_POINTS);
     glVertex2i(t_center.x(), t_center.y());
-    color_map[t_center.x() - x_offset][t_center.y() - y_offset] = boundary_color;
 
+    color_map[t_center.x() - x_offset][t_center.y() - y_offset] = 1;
     que.push({t_center.x(), t_center.y()});
 
     while (!que.empty()) {
         auto cur = que.front();
         que.pop();
+
         for (int i = 0; i < 4; ++i) {
             int xx = cur.first + dx[i];
             int yy = cur.second + dy[i];
             
-            if (xx - x_offset < 0 || xx - x_offset >= frame_width || yy - y_offset < 0 || yy - y_offset >= frame_height) {
+            if (xx < x_offset || xx - x_offset >= frame_width || yy < y_offset || yy - y_offset >= frame_height) {
                 continue;
             }
 
-            if (color_map[xx - x_offset][yy - y_offset] != boundary_color && k_borderID[xx][yy] != m_id) {
+            if (!color_map[xx - x_offset][yy - y_offset] && k_borderID[xx][yy] != m_id) {
                 que.push({xx, yy});
                 glVertex2i(xx, yy);
-                color_map[xx - x_offset][yy - y_offset] = boundary_color;
+                color_map[xx - x_offset][yy - y_offset] = 1;
             }
         }
     }
 
     glEnd();
-    glFlush();
 }
 
 void Shape::bresenham(Point first, Point last) const
@@ -105,10 +91,11 @@ void Shape::bresenham(Point first, Point last) const
     bool is_negative_slope = false;
     if (dy < 0) dy = -dy, is_negative_slope = true;
 
-
-    glBegin(GL_POINTS);
-    glPointSize(2.0);
     glColor3ub(m_boundaryColor.R, m_boundaryColor.G, m_boundaryColor.B);
+    glBegin(GL_POINTS);
+
+    glVertex2i(first.x(), first.y());
+    k_borderID[first.x()][first.y()] = k_borderID[last.x()][last.y()] = m_id;
 
     if (dx > dy) {
         int p = 2 * dy - dx;
@@ -144,8 +131,64 @@ void Shape::bresenham(Point first, Point last) const
 	glEnd();
 }
 
+
+void Shape::bresenham_rev(Point first, Point last) const
+{
+	if (first > last)
+        swap(first, last);
+    
+    int dx = last.x() - first.x();
+    int dy = last.y() - first.y();
+    
+    bool is_negative_slope = false;
+    if (dy < 0) dy = -dy, is_negative_slope = true;
+
+    k_borderID[first.x()][first.y()] = k_borderID[last.x()][last.y()] = 0;
+
+    if (dx > dy) {
+        int p = 2 * dy - dx;
+        const int A = 2 * dy;
+        const int B = 2 * (dy - dx);
+
+        int interval = 1;
+        if (is_negative_slope) interval = -1;
+        
+        for (int x = first.x(), y = first.y(); x <= last.x(); ++x) {
+            k_borderID[x][y] = 0;
+            if (p <= 0) p += A;
+            else p += B, y += interval;
+        }
+    }
+    else {
+        int p = 2 * dx - dy;
+        const int A = 2 * dx;
+        const int B = 2 * (dx - dy);
+
+        int interval = 1;
+        if (is_negative_slope) interval = -1;
+
+        for (int x = first.x(), y = first.y(); y != last.y() + interval; y += interval) {
+            k_borderID[x][y] = 0;
+            if (p <= 0) p += A;
+            else p += B, ++x;
+        }
+    }
+}
+
+void Shape::unbound() {
+    
+}
+
+bool Shape::filled() {
+    return m_fillColor != Color::WHITE;
+}
+
+
 Point Shape::center() const {
-	return {(m_bottomLeft.x() + m_topRight.x()) / 2, (m_bottomLeft.y() + m_topRight.y()) / 2};
+	return {
+        (m_bottomLeft.x() + m_topRight.x()) / 2, 
+        (m_bottomLeft.y() + m_topRight.y()) / 2
+    };
 }
 
 void Shape::initialize(const uint32_t& screen_width, const uint32_t& screen_height) {
@@ -181,6 +224,12 @@ Color Shape::getFillColor()
 Color Shape::getBoundaryColor()
 {
     return m_boundaryColor;
+}
+
+void Shape::setBoundary(const Point& first, const Point& second) {
+    unbound();
+    m_bottomLeft = {min(first.x(), second.x()), min(first.y(), second.y())};
+    m_topRight = {max(first.x(), second.x()), max(first.y(), second.y())};
 }
 
 hashmap<uint8_t, bool> Shape::k_idMarker;

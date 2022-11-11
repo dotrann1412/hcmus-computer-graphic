@@ -51,10 +51,6 @@ public:
 
 	bool operator > (const Point& another);
 	bool operator < (const Point& another);
-
-public:
-	static Point* parse(std::string);
-	static Point* try_parse(std::string);
 };
 
 #endif

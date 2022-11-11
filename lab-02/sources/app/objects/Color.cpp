@@ -9,10 +9,18 @@ const Color Color::BLACK = { 0, 0, 0 };
 const Color Color::WHITE = { 255, 255, 255 };
 
 bool Color::operator == (const Color& another) const {
-	return (1 << 8) * this->R == int(1 << 8) * another.R
-		&& (1 << 8) * this->G == int(1 << 8) * another.G
-		&& (1 << 8) * this->B == int(1 << 8) * another.B;
+	return this->R == another.R
+		&&  this->G == another.G
+		&&  this->B == another.B;
 }
+
+Color& Color::operator = (const Color& color) {
+	R = color.R;
+	G = color.G;
+	B = color.B;
+	return *this;
+}
+
 
 bool Color::operator != (const Color& another) const {
 	return 1 - (*this == another);
