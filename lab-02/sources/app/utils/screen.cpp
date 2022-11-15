@@ -1,35 +1,25 @@
 #include "screen.h"
-
 #include <memory>
-
-const int Screen::WINDOW_HEIGHT = 700;
-
-const int Screen::WINDOW_WIDTH = 700;
-
-std::vector<std::shared_ptr<Shape>> Screen::k_shapes;
 #include <ctime>
-
 #include <iostream>
-
 #include "./timer.h"
-
 #include <future>
 
 void Screen::display() 
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 	static Timer timer;
 
-	float point_size = max(1.0 * glutGet(GLUT_WINDOW_WIDTH) / Screen::WINDOW_WIDTH, 1.0 * glutGet(GLUT_WINDOW_HEIGHT) / Screen::WINDOW_HEIGHT);
+	float point_size = max(1.2 * glutGet(GLUT_WINDOW_WIDTH) / Screen::WINDOW_WIDTH, 1.2 * glutGet(GLUT_WINDOW_HEIGHT) / Screen::WINDOW_HEIGHT);
 	glPointSize(point_size);
 	
 	timer.start();
-	for (const auto& x: k_shapes)
-		x->render();
+	for (int i = 0; i < k_shapes.size(); ++i)
+		k_shapes[i]->render();
 
-	// std::cerr << "Rendering takes: " << timer.stop() << " second(s)\n";
+	std::cerr << "[STATUS] Rendering takes: " << timer.stop() << " second(s) for " << k_shapes.size() << " object(s).\n";
 
-    glFlush();
+	glFlush();
 }
 
 Screen::Screen(char** args_v, int args_c) {
@@ -37,8 +27,7 @@ Screen::Screen(char** args_v, int args_c) {
 	srand(time(nullptr));
 
 	m_glut_screen_id = glut_initialize(args_v, args_c);
-	attach_menu();
-	Line object = {{10, 10}, {500, 500}};
+	k_menuSlots = Screen::buildMenuEntries();
 	glutDisplayFunc(Screen::display);
 	glutMainLoop();
 }
@@ -53,51 +42,25 @@ Screen* Screen::show(char** args_v, int args_c) {
 	return k_instance = new Screen(args_v, args_c);
 }
 
-void Screen::attach_menu(void) {
-	
-	int incremental_code = 2;
-	
-	std::vector<std::string> colors = {
-		"Red", "White", "Yellow", "Green", "Blue"
-	};
-
-	std::vector<std::string> objects = {
-		"Teapot", "Sphere", "Torus", "Cone"
-	};
-
-	k_menu_slots.assign(objects.size(), 0);
-
-	for (int i = 0; i < objects.size(); ++i) {
-		k_menu_slots[i] = glutCreateMenu(menu);
-		for (int j = 0; j < colors.size(); ++j) {
-			glutAddMenuEntry(colors[j].c_str(), incremental_code++);
-		}
-	}
-
-	k_menu_id = glutCreateMenu(menu);
-	glutAddMenuEntry("Clear", 1);
-	
-	for (int i = 0; i < objects.size(); ++i) {
-		glutAddSubMenu(objects[i].c_str(), k_menu_slots[i]);
-	}
-
-	glutAddMenuEntry("Quit", 0);
-	glutAttachMenu(GLUT_RIGHT_BUTTON);
-}
-
-void Screen::menu(int code) {
-	if (!code) {
+void Screen::shape_menu(int code) {
+	if (code == 4) {
 		delete k_instance;
 		exit(0);
 	}
 
-	if (code == 1) {
-		k_shapes.clear();
-		glutPostRedisplay();
-	}
+	k_menuSlots[code]();
 }
 
-void Screen::terminate() {
+void Screen::menu(int code) {
+	if (code == 4) {
+		delete k_instance;
+		exit(0);
+	}
+
+	k_menuSlots[code]();
+}
+
+void Screen::close() {
 	if (k_instance)
 		delete k_instance;
 	k_instance = nullptr;
@@ -105,22 +68,22 @@ void Screen::terminate() {
 
 int Screen::glut_initialize(char** argv, int argc) {
 	glutInit(&argc, argv);
-    glutInitWindowSize(Screen::WINDOW_WIDTH, Screen::WINDOW_HEIGHT);
-    int id = glutCreateWindow("Student 20120057 - Lab 02");
-    glClearColor(1.0, 1.0, 1.0, 0.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+	glutInitWindowSize(Screen::WINDOW_WIDTH, Screen::WINDOW_HEIGHT);
+	int id = glutCreateWindow("Student 20120057 - Lab 02");
+	glClearColor(1.0, 1.0, 1.0, 0.0);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
-    gluOrtho2D(0.0, Screen::WINDOW_WIDTH, 0.0, Screen::WINDOW_HEIGHT);
+	gluOrtho2D(0.0, Screen::WINDOW_WIDTH, 0.0, Screen::WINDOW_HEIGHT);
 
-	// glutReshapeFunc(Screen::onScreenSizeChanged);
+	glutReshapeFunc(Screen::onScreenSizeChanged);
 	glutMouseFunc(Screen::onMouseEvent);
 	glutMotionFunc(Screen::onMouseMovement);    
+	glutKeyboardUpFunc(Screen::onKeyBoardEvent);
 	return id;
 }
 
 void Screen::onScreenSizeChanged(int w, int h) {
-	
 	if (w !=  WINDOW_WIDTH || h != WINDOW_HEIGHT)
 		glutReshapeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
 }
@@ -129,51 +92,246 @@ void Screen::onMouseEvent(int btn, int state, int x, int y) {
 	k_mouse_btn = btn;
 	k_mouse_state = state;
 
-	static std::vector<Color> random_set = {
-		Color::RED,
-		Color::BLUE,
-		Color::GREEN
-	};
-
 	if (btn == GLUT_LEFT_BUTTON) {
 		if (state == GLUT_DOWN) {
-			k_pressed = {x, Screen::WINDOW_HEIGHT - y};
-			k_shapes.push_back(std::shared_ptr<Shape> (
-				new Elipse(k_pressed, k_pressed, Color::GREEN, random_set[rand() % random_set.size()]))
-			);
+			bool hehe = false;
+			for (int i = k_shapes.size() - 1; i >= 0 && !hehe; --i) {
+				if (k_shapes[i]->contain({ x, Screen::WINDOW_HEIGHT - y })) {
+					if (i != k_selectedIndex) {
+						if (k_selectedIndex != -1) {
+							k_shapes[k_selectedIndex]->unselect();
+						}
+						k_shapes[i]->select();
+						k_selectedIndex = i;
+						glutPostRedisplay();
+					}
+					hehe = true;
+				}
+			}
+			
+			if (!hehe && k_selectedIndex >= 0 && k_selectedIndex < k_shapes.size()) {
+				k_shapes[k_selectedIndex]->unselect();
+				k_selectedIndex = -1;
+				glutPostRedisplay();
+			}
+
+			if (k_selectedIndex == -1 && k_hasSelection) {
+				k_pressed = { x, Screen::WINDOW_HEIGHT - y };
+				k_shapes.push_back(k_selectedCreator());
+				k_shapes.back()->setBoundary(k_pressed, k_pressed);
+				k_shapes.back()->setFillColor(k_selectedColor);
+			}
 		} else if(state == GLUT_UP) {
-			if (k_pressed.x() == x && k_pressed.y() == Screen::WINDOW_HEIGHT - y)
-				k_shapes.pop_back();
+			if (k_selectedIndex == -1 && k_hasSelection
+				&& k_pressed.x() == x && k_pressed.y() == Screen::WINDOW_HEIGHT - y)
+				k_shapes.pop_back(), glutPostRedisplay();
+			
 		}
 	}
 }
 
 void Screen::onMouseMovement(int x, int y) {
+	if (k_selectedIndex != -1)
+		return;
+
 	if (x < 0) x = 0;
 	if (x >= Screen::WINDOW_WIDTH) x = Screen::WINDOW_WIDTH - 1;
 
 	if (y < 0) y = 0;
 	if (y >= Screen::WINDOW_HEIGHT) y = Screen::WINDOW_HEIGHT - 1;
 
+
 	if (k_mouse_btn == GLUT_LEFT_BUTTON) {
-		if (k_mouse_state != GLUT_UP) {
+		if (k_mouse_state != GLUT_UP && k_shapes.size()) {
 			k_shapes.back()->setBoundary(k_pressed, {x, Screen::WINDOW_HEIGHT - y});
 			glutPostRedisplay();
 		}
 	}
 }
 
-Screen* Screen::k_instance = nullptr;
+void Screen::onKeyBoardEvent(uint8_t key, int x, int y) {
+	if (key == 127 && k_selectedIndex != -1 && k_selectedIndex < k_shapes.size()) {
+		k_shapes.erase(k_shapes.begin() + k_selectedIndex);
+		glutPostRedisplay();
+		k_selectedIndex = -1;
+	}
+}
 
+std::map<int,  std::function<void()>> Screen::buildMenuEntries () {
+	std::map<int,  std::function<void()>> res;
+
+	std::vector<std::pair<std::string, std::function<void()>>> shapes_list = {
+		{"Rectangle", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) { return std::shared_ptr<Shape> ( new Rectangle(k_pressed, k_pressed, Color::BLACK, k_selectedColor)); }; }
+		},
+		{"Square", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) {return std::shared_ptr<Shape> ( new Square(k_pressed, k_pressed, Color::BLACK, k_selectedColor));}; }
+		},
+		{"Triangle", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) {return std::shared_ptr<Shape> ( new Triangle(k_pressed, k_pressed, Color::BLACK, k_selectedColor));}; }
+		},
+		{"Circle", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) {return std::shared_ptr<Shape> ( new Circle(k_pressed, k_pressed, Color::BLACK, k_selectedColor));}; }
+		},
+		{"Elipse", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) {return std::shared_ptr<Shape> ( new Elipse(k_pressed, k_pressed, Color::BLACK, k_selectedColor));}; }
+		},
+		{"Arrow", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) {return std::shared_ptr<Shape> ( new Arrow(k_pressed, k_pressed, Color::BLACK, k_selectedColor));}; }
+		},
+		{"Star", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) {return std::shared_ptr<Shape> ( new Star(k_pressed, k_pressed, Color::BLACK, k_selectedColor));}; }
+		},
+		{"Minus", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) {return std::shared_ptr<Shape> ( new Minus(k_pressed, k_pressed, Color::BLACK, k_selectedColor));}; }
+		},
+		{"Times", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) {return std::shared_ptr<Shape> ( new Times(k_pressed, k_pressed, Color::BLACK, k_selectedColor));}; }
+		},
+		{"Divide", [&]() {
+			k_hasSelection = true,
+			k_selectedCreator = []() {return std::shared_ptr<Shape>(new Divide(k_pressed, k_pressed, Color::BLACK, k_selectedColor)); }; }
+		},
+		{"Plus", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) {return std::shared_ptr<Shape> ( new Plus(k_pressed, k_pressed, Color::BLACK, k_selectedColor));}; }
+		},
+		{"Hexagon", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) {return std::shared_ptr<Shape> ( new Hexagon(k_pressed, k_pressed, Color::BLACK, k_selectedColor));}; }
+		},
+		{"Pentagon", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) {return std::shared_ptr<Shape> ( new Pentagon(k_pressed, k_pressed, Color::BLACK, k_selectedColor));}; }
+		},
+		{"Line", [&] () {
+			k_hasSelection = true, 
+			k_selectedCreator  = [] ( ) {return std::shared_ptr<Shape> ( new Line(k_pressed, k_pressed, Color::BLACK, k_selectedColor));}; 
+		}}
+	};
+
+	std::vector<std::pair<std::string, std::function<void()>>> colors_list = {
+		{"Red", [&] () { 
+			k_selectedColor = Color::RED; 
+			changeCurrentSelectedColor();
+		}},
+		{"Green", [&] () { 
+			k_selectedColor = Color::GREEN; 
+			changeCurrentSelectedColor();
+		}},
+		{"Blue", [&] () { 
+			k_selectedColor = Color::BLUE; 
+			changeCurrentSelectedColor();
+		}},
+		{"Cyan", [&] () { 
+			k_selectedColor = Color::CYAN; 
+			changeCurrentSelectedColor();
+		}},
+		{"Yellow", [&] () { 
+			k_selectedColor = Color::YELLOW; 
+			changeCurrentSelectedColor(); 
+		}},
+		{"Black", [&] () { 
+			k_selectedColor = Color::BLACK; 
+			changeCurrentSelectedColor();
+		}},
+		{"None", [&] () { 
+			k_selectedColor = Color::WHITE; 
+			changeCurrentSelectedColor(); 
+		}},
+	};
+
+	std::vector<std::pair<std::string, std::function<void()>>> root_entry = {
+		{"Clear", [&]() {
+			k_shapes.clear();
+
+			k_hasSelection = true;
+			k_selectedCreator = []() {
+				return std::shared_ptr<Shape>(new Rectangle(k_pressed, k_pressed, Color::BLACK, k_selectedColor));
+			};
+
+			glutPostRedisplay();
+		}},
+		{"Choose shape", []() {}},
+		{"Choose color", []() {}},
+		{"Exit", [&] () {}},
+	};
+
+	int iter = 10;
+
+	int shape_menu_id = glutCreateMenu(menu);
+	
+	for (int i = 0; i < shapes_list.size(); ++i) {
+		res[iter] = shapes_list[i].second;
+		glutAddMenuEntry(shapes_list[i].first.c_str(), iter++);
+	}
+
+	int color_menu_id = glutCreateMenu(menu);
+
+	for (int i = 0; i < colors_list.size(); ++i) {
+		res[iter] = colors_list[i].second;
+		glutAddMenuEntry(colors_list[i].first.c_str(), iter++);
+	}
+
+	k_menu_id = glutCreateMenu(menu);
+
+	glutAddMenuEntry(root_entry[0].first.c_str(), 0);
+	res[0] = root_entry[0].second;
+
+	glutAddSubMenu(root_entry[1].first.c_str(), shape_menu_id);
+
+	glutAddSubMenu(root_entry[2].first.c_str(), color_menu_id);
+
+	glutAddMenuEntry(root_entry[3].first.c_str(), 4);
+	res[3] = root_entry[3].second;
+
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+	return res;
+};
+
+Screen* Screen::k_instance = nullptr;
 
 int Screen::k_menu_id;
 
 int Screen::k_choice;
 
-std::vector<int> Screen::k_menu_slots;
-
 int Screen::k_mouse_btn;
-	
+
 int Screen::k_mouse_state;
 
 Point Screen::k_pressed;
+
+std::function<std::shared_ptr<Shape>()> Screen::k_selectedCreator = [] ( ) { 
+	return std::shared_ptr<Shape> ( new Rectangle(k_pressed, k_pressed, Color::BLACK, k_selectedColor)); 
+}; 
+
+Color Screen::k_selectedColor = Color::CYAN;
+
+const int Screen::WINDOW_HEIGHT = 700;
+
+const int Screen::WINDOW_WIDTH = 700;
+
+std::vector<std::shared_ptr<Shape>> Screen::k_shapes;
+
+std::map<int,  std::function<void()>> Screen::k_menuSlots;
+
+int Screen::k_hasSelection = true;
+
+int Screen::k_selectedIndex = -1;
+
+std::function<void()> Screen::changeCurrentSelectedColor = []() {
+	if (k_selectedIndex != -1 && k_selectedColor != k_shapes[k_selectedIndex]->getFillColor()) {
+		k_shapes[k_selectedIndex]->setFillColor(k_selectedColor.darker());
+		glutPostRedisplay();
+	}
+};
