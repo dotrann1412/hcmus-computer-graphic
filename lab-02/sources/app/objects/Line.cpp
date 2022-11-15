@@ -5,7 +5,8 @@ Line::Line(): Shape({0, 0}, {0, 0}) {
 	this->m_start = this->m_end = Point(0, 0);
 }
 
-Line::Line(const Point& a, const Point& b): Shape(a, b) {
+Line::Line(const Point& a, const Point& b, const Color& boundary_color, const Color& fill_color)
+	: Shape(a, b, boundary_color, fill_color) {
 	this->m_start = a;
 	this->m_end = b;
 }
@@ -52,6 +53,12 @@ void Line::render() const {
 
 void Line::unbound() {
 	Shape::bresenham_rev(m_start, m_end);
+}
+
+void Line::setBoundary(const Point& first, const Point& second) {
+	this->m_start = first;
+	this->m_end = second;
+	unbound();
 }
 
 bool Line::contain(const Point& pts) {

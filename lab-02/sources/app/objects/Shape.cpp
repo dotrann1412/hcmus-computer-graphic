@@ -7,12 +7,28 @@
 #include <queue>
 
 Shape::Shape(const Point& rect_start, const Point& rect_end, const Color& boundary_colr, const Color& fill_color) {
+    if (!k_hasInititalized) {
+        for (int i = 0; i < 1 << 8; ++i) {
+            k_avalableID.push(i);
+        }
+        k_hasInititalized = true;
+    }
+
 	m_bottomLeft = {std::min(rect_start.x(), rect_end.x()), std::min(rect_start.y(), rect_end.y())};
 	m_topRight = {std::max(rect_start.x(), rect_end.x()), std::max(rect_start.y(), rect_end.y())};
 	m_boundaryColor = boundary_colr;
     m_fillColor = fill_color;
-    m_id = k_idMarker.size() + 1;
-    k_idMarker[m_id] = true;
+    m_id = 0;
+
+    if (!k_avalableID.empty()) {
+        m_id = k_avalableID.top();
+        k_avalableID.pop();
+    }
+    else {
+        cout << "[WARNING] ID manager ran out of resource. Erase any drawn object to continue normally." << '\n';
+    }
+
+    m_isSelected = false;
 }
 
 Shape::Shape(const Shape& another) {
@@ -20,17 +36,29 @@ Shape::Shape(const Shape& another) {
 	m_topRight = another.m_topRight;
 	m_boundaryColor = another.m_boundaryColor;
     m_fillColor = another.m_fillColor;
+    if (!k_avalableID.empty()) {
+        m_id = k_avalableID.top();
+        k_avalableID.pop();
+    }
+    else {
+        cout << "[WARNING] ID manager ran out of resource. Erase any drawn object to continue normally." << '\n';
+    }
+
 }
 
 Shape::~Shape() {
     unbound();
-    k_idMarker.erase(m_id);
+    k_avalableID.push(m_id);
 }
 
 bool Shape::contain(const Point& point) {
 	return point.x() >= m_bottomLeft.x() && point.x() <= m_topRight.x() 
 		&& point.y() >= m_bottomLeft.y() && point.y() <= m_topRight.y();
 }
+
+//void Shape::render() {
+//    cerr << "Render...." << '\n';
+//}
 
 void Shape::boundary_fill() const {
 	static int dx[] = {1, -1, 0, 0};
@@ -95,6 +123,8 @@ void Shape::bresenham(Point first, Point last) const
     glBegin(GL_POINTS);
 
     glVertex2i(first.x(), first.y());
+    glVertex2i(last.x(), last.y());
+
     k_borderID[first.x()][first.y()] = k_borderID[last.x()][last.y()] = m_id;
 
     if (dx > dy) {
@@ -232,5 +262,21 @@ void Shape::setBoundary(const Point& first, const Point& second) {
     m_topRight = {max(first.x(), second.x()), max(first.y(), second.y())};
 }
 
-hashmap<uint8_t, bool> Shape::k_idMarker;
+void Shape::select() {
+    cerr << m_isSelected << '\n';
+    if (!m_isSelected)
+        m_fillColor = m_fillColor.darker(), m_isSelected = true;
+}
+
+void Shape::unselect() {
+    if (m_isSelected)
+        m_fillColor = m_fillColor.brighter(), m_isSelected = false;
+}
+
+bool Shape::isSelected() {
+    return m_isSelected;
+}
+
+std::stack <uint8_t> Shape::k_avalableID;
 std::vector<std::vector<uint8_t>> Shape::k_borderID;
+bool Shape::k_hasInititalized = false;

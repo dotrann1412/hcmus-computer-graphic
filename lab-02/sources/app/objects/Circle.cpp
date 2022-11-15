@@ -51,8 +51,7 @@ void Circle::render() const {
 
     glEnd();
     
-    if (m_fillColor != Color::WHITE)
-        boundary_fill();
+    boundary_fill();
 }
 
 void Circle::unbound() {

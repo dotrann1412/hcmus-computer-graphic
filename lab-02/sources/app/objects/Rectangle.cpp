@@ -21,8 +21,7 @@ void Rectangle::render() const
 	bresenham(m_topRight, bottomRight);
 	bresenham(bottomRight, m_bottomLeft);
 	
-	if (m_fillColor != Color::WHITE)
-	 	boundary_fill();
+	boundary_fill();
 }
 
 void Rectangle::unbound() {

@@ -13,24 +13,39 @@
 class Color
 {
 public:
-	uint8_t R, G, B;
+	unsigned char R, G, B;
 	Color() : R(0), G(0), B(0) {};
-	Color(uint8_t R, uint8_t G, uint8_t B) : R(R), G(G), B(B) {};
+	
+	Color(unsigned char R, unsigned char G, unsigned char B) : R(R), G(G), B(B) {};
+	
 	Color(const Color& another) : R(another.R), G(another.G), B(another.B) {};
 
+	Color darker();
+
+	Color brighter();
+
 	const static Color RED;
+	
 	const static Color BLUE;
+	
 	const static Color GREEN;
+	
 	const static Color BLACK;
+	
 	const static Color WHITE;
 
+	const static Color CYAN;
+
+	const static Color YELLOW;
+
 	bool operator == (const Color& another) const;
+	
 	bool operator != (const Color& another) const;
 
 	Color& operator = (const Color& color);
 
 	friend std::ostream &operator << (std::ostream &s, const Color &a) {
-		s << a.R << ' ' << a.G << ' ' << a.B;
+		s << (int)a.R << ' ' << (int)a.G << ' ' << (int)a.B;
 		return s;
 	}
 };

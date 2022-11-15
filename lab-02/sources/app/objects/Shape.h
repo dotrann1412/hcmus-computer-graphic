@@ -12,7 +12,7 @@
 
 #include <functional>
 
-#include <unordered_map>
+#include <stack>
 
 #include <vector>
 
@@ -50,6 +50,12 @@ public:
 
 	bool filled();
 
+	void select();
+	
+	void unselect();
+
+	bool isSelected();
+
 protected:
 	void bresenham (
 		Point first, 
@@ -75,7 +81,7 @@ protected:
 
 	uint8_t m_id;
 
-	bool m_isSelecting;
+	bool m_isSelected;
 
 public:
 	static void initialize(const uint32_t& screen_width, const uint32_t& screen_height);
@@ -84,7 +90,9 @@ public:
 
 protected:
 
-	static hashmap<uint8_t, bool> k_idMarker;
+	static std::stack<uint8_t> k_avalableID;
+	
+	static bool k_hasInititalized;
 
 	static std::vector<std::vector<uint8_t>> k_borderID;
 };

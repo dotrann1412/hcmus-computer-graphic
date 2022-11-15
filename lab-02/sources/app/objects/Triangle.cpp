@@ -2,6 +2,8 @@
 #include "Line.h"
 #include <vector>
 
+#include "./helpers.h"
+
 Triangle::Triangle(const Point& rect_start, const Point& rect_end, const Color& boundary_color, const Color& fill_color) 
 	: Shape(rect_start, rect_end, boundary_color, fill_color) {
 
@@ -19,8 +21,7 @@ void Triangle::render() const {
 	bresenham(top, {m_topRight.x(), m_bottomLeft.y()});
 	bresenham(m_bottomLeft, {m_topRight.x(), m_bottomLeft.y()});
 
-	if (m_fillColor != Color::WHITE)
-		boundary_fill();
+	boundary_fill();
 }
 
 void Triangle::unbound() {
@@ -31,28 +32,11 @@ void Triangle::unbound() {
 }
 
 bool Triangle::contain(const Point& pts) {
-	auto intersect = [] (const Line& line, const Point& trickly)-> bool {
-		int32_t y1 = line.getStartingPoint().y(), y2 = line.getEndingPoint().y();
-		int32_t x1 = line.getStartingPoint().x(), x2 = line.getEndingPoint().x();
-		float k = (trickly.y() - y1) / (y2 - y1);
-
-		if (k < 0 || k > 1)
-			return false;
-		
-		float x_expected = x1 * k - (1 - k) * x2;
-
-		return x_expected >= trickly.x();
+	Point top = {(m_bottomLeft.x() + m_topRight.x()) / 2, m_topRight.y()};
+	std::vector<Line> boundary = {
+		{m_bottomLeft, top},
+		{top, {m_topRight.x(), m_bottomLeft.y()}},
+		{m_bottomLeft, {m_topRight.x(), m_bottomLeft.y()}}
 	};
-
-	std::vector<Line> lines = {
-		Line({(m_bottomLeft.x() + m_topRight.x()) / 2, m_topRight.y()}, {m_bottomLeft.x(), m_bottomLeft.y()}),
-		Line({(m_bottomLeft.x() + m_topRight.x()) / 2, m_topRight.y()}, {m_topRight.x(), m_bottomLeft.y()})
-	};
-
-	int count = pts.x() == (m_bottomLeft.x() + m_topRight.x()) / 2 && pts.y() == m_topRight.y();
-
-	for (const Line& x: lines)
-		count += intersect(x, pts);
-
-	return Shape::contain(pts) && (count & 1);
+	return inside(pts, boundary);
 }

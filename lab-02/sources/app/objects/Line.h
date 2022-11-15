@@ -6,8 +6,6 @@
 
 #include "Point.h"
 
-
-
 #include "Shape.h"
 
 class Line: public Shape
@@ -19,7 +17,7 @@ public:
 	//constructors
 	Line();
 
-	Line(const Point&, const Point& );
+	Line(const Point&, const Point& , const Color& boundary_color = Color::BLACK, const Color& fill_color = Color::WHITE);
 	
 	Line(const Line&); //copy structor
 	
@@ -27,8 +25,12 @@ public:
 
 public:
 	void render() const;
+
 	bool contain(const Point& point);
+	
 	void unbound();
+
+	void setBoundary(const Point& first, const Point& second);
 
 public:
 	//return euclid distance between starting and ending point
