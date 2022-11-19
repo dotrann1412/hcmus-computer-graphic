@@ -10,14 +10,14 @@ void Screen::display()
 	glClear(GL_COLOR_BUFFER_BIT);
 	static Timer timer;
 
-	float point_size = max(1.2 * glutGet(GLUT_WINDOW_WIDTH) / Screen::WINDOW_WIDTH, 1.2 * glutGet(GLUT_WINDOW_HEIGHT) / Screen::WINDOW_HEIGHT);
+	float point_size = max(1.5 * glutGet(GLUT_WINDOW_WIDTH) / Screen::WINDOW_WIDTH, 1.5 * glutGet(GLUT_WINDOW_HEIGHT) / Screen::WINDOW_HEIGHT);
 	glPointSize(point_size);
 	
 	timer.start();
 	for (int i = 0; i < k_shapes.size(); ++i)
 		k_shapes[i]->render();
 
-	std::cerr << "[STATUS] Rendering takes: " << timer.stop() << " second(s) for " << k_shapes.size() << " object(s).\n";
+	std::cout << "[STATUS] Rendering takes: " << 1000 * timer.stop() << " ms for " << k_shapes.size() << " object(s).\n";
 
 	glFlush();
 }
