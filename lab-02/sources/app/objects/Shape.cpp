@@ -56,10 +56,6 @@ bool Shape::contain(const Point& point) {
 		&& point.y() >= m_bottomLeft.y() && point.y() <= m_topRight.y();
 }
 
-//void Shape::render() {
-//    cerr << "Render...." << '\n';
-//}
-
 void Shape::boundary_fill() const {
 	static int dx[] = {1, -1, 0, 0};
 	static int dy[] = {0, 0, 1, -1};
@@ -263,7 +259,6 @@ void Shape::setBoundary(const Point& first, const Point& second) {
 }
 
 void Shape::select() {
-    cerr << m_isSelected << '\n';
     if (!m_isSelected)
         m_fillColor = m_fillColor.darker(), m_isSelected = true;
 }

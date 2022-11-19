@@ -32,6 +32,8 @@ void Triangle::unbound() {
 }
 
 bool Triangle::contain(const Point& pts) {
+	if (!Shape::contain(pts))
+		return false;
 	Point top = {(m_bottomLeft.x() + m_topRight.x()) / 2, m_topRight.y()};
 	std::vector<Line> boundary = {
 		{m_bottomLeft, top},

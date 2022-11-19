@@ -158,5 +158,7 @@ void Elipse::setBoundary(const Point& first, const Point& second)
 }
 
 bool Elipse::contain(const Point& pts) {
+    if (!Shape::contain(pts))
+        return false;
 	return (pts.x() - m_center.x()) * (pts.x() - m_center.x()) * (m_b * m_b)+ (pts.y() - m_center.y()) * (pts.y() - m_center.y()) *  (m_a * m_a)  <=  (m_a * m_a) *  (m_b * m_b);
 }

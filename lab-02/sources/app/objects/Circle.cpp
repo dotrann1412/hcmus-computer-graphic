@@ -84,5 +84,5 @@ void Circle::setBoundary(const Point& first, const Point& second)
 }
 
 bool Circle::contain(const Point& pts) {
-	return (pts.x() - m_center.x()) * (pts.x() - m_center.x()) + (pts.y() - m_center.y()) * (pts.y() - m_center.y()) <= m_a * m_a;
+	return Shape::contain(pts) && (pts.x() - m_center.x()) * (pts.x() - m_center.x()) + (pts.y() - m_center.y()) * (pts.y() - m_center.y()) <= m_a * m_a;
 }

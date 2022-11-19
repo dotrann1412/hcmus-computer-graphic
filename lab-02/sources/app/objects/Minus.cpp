@@ -30,6 +30,8 @@ void Minus::render() const {
 }
 
 bool Minus::contain(const Point& point) {
+    if (!Shape::contain(point))
+        return false;
     std::vector<Line> line = {};
     int h_side = m_topRight.y() - m_bottomLeft.y(), v_side = m_topRight.x() - m_bottomLeft.x();
     std::vector<Point> boundary = {
