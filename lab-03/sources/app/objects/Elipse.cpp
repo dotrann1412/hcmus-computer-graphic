@@ -34,10 +34,10 @@ void Elipse::render() const {
 
     while (dx < dy) {
 
-        glVertex2i(center_x + x, center_y + y);
-        glVertex2i(center_x + x, center_y - y);
-        glVertex2i(center_x - x, center_y + y);
-        glVertex2i(center_x - x, center_y - y);
+        setPixel(ssscenter_x + x, center_y + y);
+        setPixel(ssscenter_x + x, center_y - y);
+        setPixel(ssscenter_x - x, center_y + y);
+        setPixel(ssscenter_x - x, center_y - y);
 
           k_borderID[center_x + x][center_y + y]
         = k_borderID[center_x + x][center_y - y]
@@ -62,10 +62,10 @@ void Elipse::render() const {
 
     int64_t p2 = m_b_squared * (1.0f * x + 0.5f) * (1.0f * x + 0.5f) + m_a_squared * (y - 1) * (y - 1) - m_a_squared * m_b_squared;
     while (y >= 0) {
-        glVertex2i(center_x + x, center_y + y);
-        glVertex2i(center_x + x, center_y - y);
-        glVertex2i(center_x - x, center_y + y);
-        glVertex2i(center_x - x, center_y - y);
+        setPixel(ssscenter_x + x, center_y + y);
+        setPixel(ssscenter_x + x, center_y - y);
+        setPixel(ssscenter_x - x, center_y + y);
+        setPixel(ssscenter_x - x, center_y - y);
 
           k_borderID[center_x + x][center_y + y]
         = k_borderID[center_x + x][center_y - y]

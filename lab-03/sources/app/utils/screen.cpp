@@ -150,10 +150,20 @@ void Screen::onMouseMovement(int x, int y) {
 }
 
 void Screen::onKeyBoardEvent(uint8_t key, int x, int y) {
-	if (key == 127 && k_selectedIndex != -1 && k_selectedIndex < k_shapes.size()) {
-		k_shapes.erase(k_shapes.begin() + k_selectedIndex);
-		glutPostRedisplay();
-		k_selectedIndex = -1;
+	cerr << key << '\n';
+
+	switch (key)
+	{
+	case 127: // delete
+		if (k_selectedIndex != -1 && k_selectedIndex < k_shapes.size()) {
+			k_shapes.erase(k_shapes.begin() + k_selectedIndex);
+			glutPostRedisplay();
+			k_selectedIndex = -1;
+		}
+		break;
+	
+	default:
+		break;
 	}
 }
 

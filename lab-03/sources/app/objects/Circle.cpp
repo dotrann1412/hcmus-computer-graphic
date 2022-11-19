@@ -17,10 +17,10 @@ void Circle::render() const {
     int center_x = m_center.x();
     int center_y = m_center.y();
 
-    glVertex2i(center_x, center_y + m_a);
-    glVertex2i(center_x, center_y - m_a);
-    glVertex2i(center_x - m_a, center_y);
-    glVertex2i(center_x + m_a, center_y);
+    setPixel(center_x, center_y + m_a);
+    setPixel(center_x, center_y - m_a);
+    setPixel(center_x - m_a, center_y);
+    setPixel(center_x + m_a, center_y);
 
       k_borderID[center_x][center_y + m_a]
     = k_borderID[center_x][center_y - m_a]
@@ -36,10 +36,10 @@ void Circle::render() const {
         if (p < 0) p += 2 * x + 3;  
         else --y, p += 2 * (x - y) + 3;
 
-        glVertex2i(center_x + x, center_y + y); glVertex2i(center_x + y, center_y + x);
-        glVertex2i(center_x + x, center_y - y); glVertex2i(center_x + y, center_y - x);
-        glVertex2i(center_x - x, center_y + y); glVertex2i(center_x - y, center_y + x);
-        glVertex2i(center_x - x, center_y - y); glVertex2i(center_x - y, center_y - x);
+        setPixel(center_x + x, center_y + y); setPixel(center_x + y, center_y + x);
+        setPixel(center_x + x, center_y - y); setPixel(center_x + y, center_y - x);
+        setPixel(center_x - x, center_y + y); setPixel(center_x - y, center_y + x);
+        setPixel(center_x - x, center_y - y); setPixel(center_x - y, center_y - x);
 
         k_borderID[center_x + x][ center_y + y] = k_borderID[center_x + y][ center_y + x] =
         k_borderID[center_x + x][ center_y - y] = k_borderID[center_x + y][ center_y - x] =

@@ -15,9 +15,29 @@
 #include <stack>
 
 #include <vector>
+#include <cassert>
 
 template<class key_t, class value_t> 
 using hashmap = std::unordered_map<key_t, value_t>;
+
+using Transformer = std::vector<std::vector<int>>;
+
+template<class T>
+Transformer operator * (const Transformer& aa, const std::vector<std::vector<T>>& bb) {
+	assert (aa[0].size() != bb.size());
+
+	Transformer res(aa.size(), std::vector<int>(bb[0].size(), 0));
+	for (int i = 0; i < aa.size(); ++i) {
+		for (int j = 0; j < bb.size(); ++j) {
+			for (int k = 0; k < aa[i].size(); ++k) {
+				res[i][j] += aa[i][k] * bb[k][j];
+			}
+		}
+	}
+
+	return res;
+}
+
 
 class Shape
 {
@@ -56,6 +76,14 @@ public:
 
 	bool isSelected();
 
+	void shift(int dx, int dy);
+
+	void scale(float ratio);
+
+	void rotate(int alpha);
+
+	void setPixel(int x, int y);
+
 protected:
 	void bresenham (
 		Point first, 
@@ -70,6 +98,10 @@ protected:
 	virtual void unbound();
 
 protected:
+
+	float m_pointSize;
+	
+	Transformer m_trans;
 
 	Point m_bottomLeft;
 

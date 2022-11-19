@@ -20,6 +20,8 @@ Shape::Shape(const Point& rect_start, const Point& rect_end, const Color& bounda
     m_fillColor = fill_color;
     m_id = 0;
 
+    m_trans = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+
     if (!k_avalableID.empty()) {
         m_id = k_avalableID.top();
         k_avalableID.pop();
@@ -270,6 +272,22 @@ void Shape::unselect() {
 
 bool Shape::isSelected() {
     return m_isSelected;
+}
+
+void Shape::shift(int dx, int dy) {
+    m_trans = m_trans * Transformer({{1, 0, 0}, {0, 1, 0}, {dx, dy, 1}});
+}
+
+void Shape::scale(float ratio) {
+    m_trans = m_trans * std::vector<std::vector<float>>({{ratio, 0, 0}, {0, ratio, 0}, {0, 0, 1}});
+}
+
+void Shape::rotate(int alpha) {
+    m_trans = m_trans * std::vector<std::vector<double>>({{cos(alpha), -sin(alpha), 0}, {sin(alpha), cos(alpha), 0}, {0, 0, 1}});
+}
+
+void Shape::setPixel(int x, int y) {
+    glVertex2i(m_trans[0][0] * x + m_trans[0][1] * y + m_trans[0][2], m_trans[1][0] * x + m_trans[1][1] * y + m_trans[1][2]);
 }
 
 std::stack <uint8_t> Shape::k_avalableID;
