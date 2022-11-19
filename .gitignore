@@ -37,3 +37,9 @@ lab-01/sources/x64/**
 lab-01/sources/Release/**
 lab-01/sources/.vs/**
 lab-01/sources/.vscode/**
+
+lab-02/sources/Debug/**
+lab-02/sources/x64/**
+lab-02/sources/Release/**
+lab-02/sources/.vs/**
+lab-02/sources/.vscode/**
