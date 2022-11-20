@@ -9,6 +9,9 @@ const Color Color::BLACK = { 0, 0, 0 };
 const Color Color::WHITE = { 255, 255, 255 };
 const Color Color::CYAN = { 0, 255, 255 };
 const Color Color::YELLOW = { 255, 255, 0 };
+const Color Color::PURBLE = { 80, 0, 80 };
+const Color Color::GRAY = { 66, 87, 95 };
+const Color Color::ORANGE = { 251, 115, 35 };
 
 bool Color::operator == (const Color& another) const {
 	return this->R == another.R

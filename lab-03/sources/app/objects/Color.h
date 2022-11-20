@@ -38,6 +38,12 @@ public:
 
 	const static Color YELLOW;
 
+	const static Color PURBLE;
+
+	const static Color GRAY;
+
+	const static Color ORANGE;
+
 	bool operator == (const Color& another) const;
 	
 	bool operator != (const Color& another) const;
