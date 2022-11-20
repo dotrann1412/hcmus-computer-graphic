@@ -63,6 +63,8 @@ private:
 
 	static void onKeyBoardEvent(uint8_t key, int x, int y);
 
+	static void onKeyBoardEvent_Extend(int key, int x, int y);
+
 	static std::map<int, std::function<void()>> buildMenuEntries();
 
 	static std::function<void()> changeCurrentSelectedColor;

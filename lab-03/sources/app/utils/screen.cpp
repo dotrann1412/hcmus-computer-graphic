@@ -8,16 +8,9 @@
 void Screen::display() 
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	static Timer timer;
-
-	float point_size = max(1.5 * glutGet(GLUT_WINDOW_WIDTH) / Screen::WINDOW_WIDTH, 1.5 * glutGet(GLUT_WINDOW_HEIGHT) / Screen::WINDOW_HEIGHT);
-	glPointSize(point_size);
 	
-	timer.start();
 	for (int i = 0; i < k_shapes.size(); ++i)
 		k_shapes[i]->render();
-
-	std::cout << "[STATUS] Rendering takes: " << 1000 * timer.stop() << " ms for " << k_shapes.size() << " object(s).\n";
 
 	glFlush();
 }
@@ -78,8 +71,14 @@ int Screen::glut_initialize(char** argv, int argc) {
 
 	glutReshapeFunc(Screen::onScreenSizeChanged);
 	glutMouseFunc(Screen::onMouseEvent);
-	glutMotionFunc(Screen::onMouseMovement);    
-	glutKeyboardUpFunc(Screen::onKeyBoardEvent);
+	glutMotionFunc(Screen::onMouseMovement);
+	glutSpecialFunc(Screen::onKeyBoardEvent_Extend);
+	glutKeyboardFunc(Screen::onKeyBoardEvent);
+	glutSetKeyRepeat(GLUT_KEY_REPEAT_ON);
+
+	cerr << "[GL_RENDERER]: " << glGetString(GL_RENDERER) << '\n';
+	cerr << "[GL_VERSION]: " << glGetString(GL_VERSION) << '\n';
+	
 	return id;
 }
 
@@ -149,21 +148,80 @@ void Screen::onMouseMovement(int x, int y) {
 	}
 }
 
-void Screen::onKeyBoardEvent(uint8_t key, int x, int y) {
-	cerr << key << '\n';
+void Screen::onKeyBoardEvent_Extend(int key, int x, int y) {
+	if (k_selectedIndex >= 0 && k_selectedIndex < k_shapes.size()) {
+		switch (key)
+		{
+			case GLUT_KEY_LEFT: {
+				k_shapes[k_selectedIndex]->shift(-1, 0);
+				glutPostRedisplay();
+				break;
+			}
 
-	switch (key)
-	{
-	case 127: // delete
-		if (k_selectedIndex != -1 && k_selectedIndex < k_shapes.size()) {
+			case GLUT_KEY_RIGHT: {
+				k_shapes[k_selectedIndex]->shift(1, 0);
+				glutPostRedisplay();
+				break;
+			}
+
+			case GLUT_KEY_UP: {
+				k_shapes[k_selectedIndex]->shift(0, 1);
+				glutPostRedisplay();
+				break;
+			}
+
+			case GLUT_KEY_DOWN: {
+				k_shapes[k_selectedIndex]->shift(0, -1);
+				glutPostRedisplay();
+				break;
+			}
+
+
+			default:
+				break;
+
+		}
+	}
+}
+
+void Screen::onKeyBoardEvent(uint8_t key, int x, int y) {
+	if (k_selectedIndex >= 0 && k_selectedIndex < k_shapes.size()) {
+		switch (key)
+		{
+		case 127: {
 			k_shapes.erase(k_shapes.begin() + k_selectedIndex);
 			glutPostRedisplay();
 			k_selectedIndex = -1;
+			break;
 		}
-		break;
-	
-	default:
-		break;
+
+		case 'L': case 'l': {
+			k_shapes[k_selectedIndex]->rotate(-0.0174532925 );
+			glutPostRedisplay();
+			break;
+		}
+
+		case 'R': case 'r': {
+			k_shapes[k_selectedIndex]->rotate( 0.0174532925 );
+			glutPostRedisplay();
+			break;
+		}
+
+		case 61: {
+			k_shapes[k_selectedIndex]->scale(1.1);
+			glutPostRedisplay();
+			break;
+		}
+
+		case 45: {
+			k_shapes[k_selectedIndex]->scale(0.9);
+			glutPostRedisplay();
+			break;
+		}
+
+		default:
+			break;
+		}
 	}
 }
 
@@ -254,6 +312,18 @@ std::map<int,  std::function<void()>> Screen::buildMenuEntries () {
 			k_selectedColor = Color::BLACK; 
 			changeCurrentSelectedColor();
 		}},
+		{"Purble", [&]() {
+			k_selectedColor = Color::PURBLE;
+			changeCurrentSelectedColor();
+		}},
+		{"Orange", [&]() {
+			k_selectedColor = Color::ORANGE;
+			changeCurrentSelectedColor();
+		}},
+		{"Gray", [&]() {
+			k_selectedColor = Color::GRAY;
+			changeCurrentSelectedColor();
+		}},
 		{"None", [&] () { 
 			k_selectedColor = Color::WHITE; 
 			changeCurrentSelectedColor(); 
@@ -302,7 +372,7 @@ std::map<int,  std::function<void()>> Screen::buildMenuEntries () {
 	glutAddSubMenu(root_entry[2].first.c_str(), color_menu_id);
 
 	glutAddMenuEntry(root_entry[3].first.c_str(), 4);
-	res[3] = root_entry[3].second;
+	// res[4] = root_entry[4].second;
 
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 

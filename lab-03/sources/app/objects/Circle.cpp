@@ -2,6 +2,9 @@
 
 Circle::Circle(const Point& rect_start, const Point& rect_end, const Color& boundary_color, const Color& fill_color)
 	: Elipse(rect_start, rect_end, boundary_color, fill_color) {
+    int32_t side = std::min(m_topRight.x() - m_bottomLeft.x(), m_topRight.y() - m_bottomLeft.y());
+    m_bottomLeft = { m_bottomLeft.x(), m_topRight.y() - side };
+    m_topRight = { m_bottomLeft.x() + side, m_topRight.y() };
 	this->m_a = this->m_b = std::min(this->m_a, this->m_b);
 }
 
@@ -11,6 +14,7 @@ Circle::Circle(const Circle& another)
 }
 
 void Circle::render() const {
+    glPointSize(m_pointSize);
 	glBegin(GL_POINTS);
     glColor3ub(m_boundaryColor.R, m_boundaryColor.G, m_boundaryColor.B);
 
@@ -84,5 +88,7 @@ void Circle::setBoundary(const Point& first, const Point& second)
 }
 
 bool Circle::contain(const Point& pts) {
-	return Shape::contain(pts) && (pts.x() - m_center.x()) * (pts.x() - m_center.x()) + (pts.y() - m_center.y()) * (pts.y() - m_center.y()) <= m_a * m_a;
+    Point _center = m_center.transform(m_trans);
+    int _radius = Point(_center.x(), m_topRight.y()).transform(m_trans).y() - _center.y();
+	return Shape::contain(pts) && (pts.x() - _center.x()) * (pts.x() - _center.x()) + (pts.y() - _center.y()) * (pts.y() - _center.y()) <= _radius * _radius;
 }

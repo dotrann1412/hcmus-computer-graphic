@@ -48,6 +48,7 @@ float Line::length() const {
 }
 
 void Line::render() const {
+    glPointSize(m_pointSize);
 	Shape::bresenham(m_start, m_end);
 }
 

@@ -1,6 +1,5 @@
 #include "Minus.h"
 #include "Line.h"
-#include "helpers.h"
 
 Minus::Minus(const Point& rect_start, const Point& rect_end, 
     const Color& boundary_color, const Color& fill_color) 
@@ -14,6 +13,8 @@ Minus::Minus(const Minus& another)
 }
 
 void Minus::render() const {
+    glPointSize(m_pointSize);
+    glPointSize(m_pointSize);
     int h_side = m_topRight.y() - m_bottomLeft.y(), v_side = m_topRight.x() - m_bottomLeft.x();
     std::vector<Point> boundary = {
         Point(m_bottomLeft.x(), m_bottomLeft.y() + 1.0 * h_side / 3),
@@ -32,7 +33,7 @@ void Minus::render() const {
 bool Minus::contain(const Point& point) {
     if (!Shape::contain(point))
         return false;
-    std::vector<Line> line = {};
+
     int h_side = m_topRight.y() - m_bottomLeft.y(), v_side = m_topRight.x() - m_bottomLeft.x();
     std::vector<Point> boundary = {
         Point(m_bottomLeft.x(), m_bottomLeft.y() + 1.0 * h_side / 3),
@@ -40,12 +41,11 @@ bool Minus::contain(const Point& point) {
         Point(m_topRight.x(), m_bottomLeft.y() + 2.0 * h_side / 3),
         Point(m_topRight.x(), m_bottomLeft.y() + 1.0 * h_side / 3),
     };
-    
-    for (int i = 0, n = boundary.size(); i < n; ++i) {
-        line.push_back({boundary[i], boundary[(i + 1) % n]});
-    }
 
-    return inside(point, line);
+    for (auto& x: boundary)
+        x = x.transform(m_trans);
+
+    return inside(point, boundary);
 }
 
 void Minus::setBoundary(const Point& first, const Point& second) {

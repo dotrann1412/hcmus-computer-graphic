@@ -5,6 +5,7 @@
 #include <string>
 #include <string.h>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -21,6 +22,10 @@ public:
 	//constructors
 	Point();
 	Point(const int32_t&, const int32_t&);
+	
+	template<class T = int32_t>
+	Point(std::pair<T, T> pair) : m_x(pair.first), m_y(pair.second) {};
+
 	Point(const Point&);
 
 	//destructor
@@ -35,6 +40,7 @@ public:
 	//setter
 	void setx(const int32_t&);
 	void sety(const int32_t&);
+	Point transform(std::vector<std::vector<double>> conv) const;
 
 public:
 	//return distance between 2 pts
@@ -44,6 +50,7 @@ public:
 public:
 	//toString and getInstanceCount
 	std::string to_string() const; //return information of this string under a string
+	std::pair<int32_t, int32_t> makepair() const;
 	static int instance_count(); //return the number of Point initialized
 
 	friend std::istream& operator >> (std::istream& s, Point&);

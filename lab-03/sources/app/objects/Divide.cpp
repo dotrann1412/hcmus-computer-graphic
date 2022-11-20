@@ -1,6 +1,5 @@
 #include "Divide.h"
 #include "Line.h"
-#include "helpers.h"
 
 Divide::Divide(const Point& rect_start, const Point& rect_end, 
     const Color& boundary_color, const Color& fill_color) 
@@ -14,6 +13,7 @@ Divide::Divide(const Divide& another)
 }
 
 void Divide::render() const {
+    glPointSize(m_pointSize);
     int h_side = m_topRight.y() - m_bottomLeft.y(), v_side = m_topRight.x() - m_bottomLeft.x();
     std::vector<Point> boundary = {
         m_bottomLeft,
@@ -32,20 +32,19 @@ void Divide::render() const {
 bool Divide::contain(const Point& point) {
     if (!Shape::contain(point))
         return false;
-    std::vector<Line> line = {};
     int h_side = m_topRight.y() - m_bottomLeft.y(), v_side = m_topRight.x() - m_bottomLeft.x();
-    std::vector<Point> boundary = {
+    
+    std::vector<Point> corners = {
         m_bottomLeft,
         Point(m_bottomLeft.x() + 1.0 * v_side / 5, m_bottomLeft.y()),
         m_topRight,
         Point(m_bottomLeft.x() + 4.0 * v_side / 5, m_topRight.y()),
     };
-    
-    for (int i = 0, n = boundary.size(); i < n; ++i) {
-        line.push_back({boundary[i], boundary[(i + 1) % n]});
-    }
 
-    return inside(point, line);
+    for (auto& x: corners)
+        x = x.transform(m_trans);
+
+    return inside(point, corners);
 }
 
 void Divide::setBoundary(const Point& first, const Point& second) {

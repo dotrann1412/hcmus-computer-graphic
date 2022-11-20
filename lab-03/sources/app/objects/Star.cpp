@@ -1,6 +1,5 @@
 #include "Star.h"
 #include "Line.h"
-#include "helpers.h"
 
 Star::Star(const Point& rect_start, const Point& rect_end, 
     const Color& boundary_color, const Color& fill_color) 
@@ -14,6 +13,7 @@ Star::Star(const Star& another)
 }
 
 void Star::render() const {
+    glPointSize(m_pointSize);
     int h_side = m_topRight.y() - m_bottomLeft.y(), v_side = m_topRight.x() - m_bottomLeft.x();
     std::vector<Point> boundary = {
         Point(m_bottomLeft.x() + v_side / 2, m_topRight.y()),
@@ -53,11 +53,10 @@ bool Star::contain(const Point& point) {
         Point(m_bottomLeft.x() + 5.0 * v_side / 14, m_bottomLeft.y() + 9.0 * h_side / 14),
     };
     
-    for (int i = 0, n = boundary.size(); i < n; ++i) {
-        line.push_back({boundary[i], boundary[(i + 1) % n]});
-    }
+    for (auto& x: boundary)
+        x = x.transform(m_trans);
 
-    return inside(point, line);
+    return inside(point, boundary);
 }
 
 void Star::setBoundary(const Point& first, const Point& second) {

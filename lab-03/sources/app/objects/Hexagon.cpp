@@ -1,6 +1,5 @@
 #include "Hexagon.h"
 #include "Line.h"
-#include "helpers.h"
 
 Hexagon::Hexagon(const Point& rect_start, const Point& rect_end, 
     const Color& boundary_color, const Color& fill_color) 
@@ -14,6 +13,7 @@ Hexagon::Hexagon(const Hexagon& another)
 }
 
 void Hexagon::render() const {
+    glPointSize(m_pointSize);
     int h_side = m_topRight.y() - m_bottomLeft.y(), v_side = m_topRight.x() - m_bottomLeft.x();
     std::vector<Point> boundary = {
         Point(m_bottomLeft.x() + v_side / 2, m_topRight.y()),
@@ -34,8 +34,8 @@ void Hexagon::render() const {
 bool Hexagon::contain(const Point& point) {
     if (!Shape::contain(point))
         return false;
-    std::vector<Line> line = {};
     int h_side = m_topRight.y() - m_bottomLeft.y(), v_side = m_topRight.x() - m_bottomLeft.x();
+
     std::vector<Point> boundary = {
         Point(m_bottomLeft.x() + v_side / 2, m_topRight.y()),
         Point(m_topRight.x(), m_bottomLeft.y() + 3.0 * h_side / 4),
@@ -44,12 +44,11 @@ bool Hexagon::contain(const Point& point) {
         Point(m_bottomLeft.x(), m_bottomLeft.y() + 1.0 * h_side / 4),
         Point(m_bottomLeft.x(), m_bottomLeft.y() + 3.0 * h_side / 4),
     };
-    
-    for (int i = 0, n = boundary.size(); i < n; ++i) {
-        line.push_back({boundary[i], boundary[(i + 1) % n]});
-    }
 
-    return inside(point, line);
+    for (auto& x: boundary) 
+        x = x.transform(m_trans);
+
+    return inside(point, boundary);
 }
 
 void Hexagon::setBoundary(const Point& first, const Point& second) {

@@ -48,6 +48,13 @@ float Point::distance(const Point& other) const {
 	return Point::distance(*this, other);
 }
 
+Point Point::transform(std::vector<std::vector<double>> trans) const {
+	return Point(
+		trans[0][0] * m_x + trans[1][0] * m_y + trans[2][0], 
+		trans[0][1] * m_x + trans[1][1] * m_y + trans[2][1]
+	);
+}
+
 float Point::distance(const Point& a, const Point& b) {
 	float changeX = abs(a.m_x - b.m_x);
 	float changeY = abs(a.m_y - b.m_y);
@@ -81,4 +88,8 @@ bool Point::operator > (const Point& another) {
 
 bool Point::operator < (const Point& another) {
 	return m_x != another.m_x ? m_x < another.m_x : m_y < another.m_y;
+}
+
+std::pair<int32_t, int32_t> Point::makepair() const {
+	return { m_x, m_y };
 }

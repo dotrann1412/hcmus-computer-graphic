@@ -11,8 +11,8 @@ Rectangle::Rectangle(const Rectangle& another)
 
 }
 
-void Rectangle::render() const
-{
+void Rectangle::render() const {
+    glPointSize(m_pointSize);
 	Point topLeft 	= {m_bottomLeft.x(), m_topRight.y()}, 
 		bottomRight = {m_topRight.x(), m_bottomLeft.y()};
 

@@ -20,24 +20,17 @@
 template<class key_t, class value_t> 
 using hashmap = std::unordered_map<key_t, value_t>;
 
-using Transformer = std::vector<std::vector<int>>;
+using Transformer = std::vector<std::vector<double>>;
 
-template<class T>
-Transformer operator * (const Transformer& aa, const std::vector<std::vector<T>>& bb) {
-	assert (aa[0].size() != bb.size());
+template<class T = double>
+struct LinePack {
+	std::pair<T, T> first;
+	std::pair<T, T> second;
+	LinePack(std::pair<T, T> first, std::pair<T, T> second) : first(first), second(second) {}
+	LinePack(const LinePack<T>& another) : first(another.first), second(another.second) {};
+};
 
-	Transformer res(aa.size(), std::vector<int>(bb[0].size(), 0));
-	for (int i = 0; i < aa.size(); ++i) {
-		for (int j = 0; j < bb.size(); ++j) {
-			for (int k = 0; k < aa[i].size(); ++k) {
-				res[i][j] += aa[i][k] * bb[k][j];
-			}
-		}
-	}
-
-	return res;
-}
-
+bool inside(const Point& point, const std::vector<Point>& boundary);
 
 class Shape
 {
@@ -76,13 +69,15 @@ public:
 
 	bool isSelected();
 
+	void transformDefault();
+
 	void shift(int dx, int dy);
 
-	void scale(float ratio);
+	void scale(double ratio);
 
-	void rotate(int alpha);
+	void rotate(double alpha);
 
-	void setPixel(int x, int y);
+	void setPixel(int x, int y) const;
 
 protected:
 	void bresenham (

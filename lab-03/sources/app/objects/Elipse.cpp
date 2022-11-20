@@ -17,6 +17,7 @@ Elipse::~Elipse() {
 }
 
 void Elipse::render() const {
+    glPointSize(m_pointSize);
 	glBegin(GL_POINTS);
     glColor3ub(m_boundaryColor.R, m_boundaryColor.G, m_boundaryColor.B);
 
@@ -34,10 +35,10 @@ void Elipse::render() const {
 
     while (dx < dy) {
 
-        setPixel(ssscenter_x + x, center_y + y);
-        setPixel(ssscenter_x + x, center_y - y);
-        setPixel(ssscenter_x - x, center_y + y);
-        setPixel(ssscenter_x - x, center_y - y);
+        setPixel(center_x + x, center_y + y);
+        setPixel(center_x + x, center_y - y);
+        setPixel(center_x - x, center_y + y);
+        setPixel(center_x - x, center_y - y);
 
           k_borderID[center_x + x][center_y + y]
         = k_borderID[center_x + x][center_y - y]
@@ -62,10 +63,10 @@ void Elipse::render() const {
 
     int64_t p2 = m_b_squared * (1.0f * x + 0.5f) * (1.0f * x + 0.5f) + m_a_squared * (y - 1) * (y - 1) - m_a_squared * m_b_squared;
     while (y >= 0) {
-        setPixel(ssscenter_x + x, center_y + y);
-        setPixel(ssscenter_x + x, center_y - y);
-        setPixel(ssscenter_x - x, center_y + y);
-        setPixel(ssscenter_x - x, center_y - y);
+        setPixel(center_x + x, center_y + y);
+        setPixel(center_x + x, center_y - y);
+        setPixel(center_x - x, center_y + y);
+        setPixel(center_x - x, center_y - y);
 
           k_borderID[center_x + x][center_y + y]
         = k_borderID[center_x + x][center_y - y]
@@ -160,5 +161,13 @@ void Elipse::setBoundary(const Point& first, const Point& second)
 bool Elipse::contain(const Point& pts) {
     if (!Shape::contain(pts))
         return false;
-	return (pts.x() - m_center.x()) * (pts.x() - m_center.x()) * (m_b * m_b)+ (pts.y() - m_center.y()) * (pts.y() - m_center.y()) *  (m_a * m_a)  <=  (m_a * m_a) *  (m_b * m_b);
+    
+    Point _center = m_center.transform(m_trans);
+    Point _topRight = m_topRight.transform(m_trans);
+    Point _bottomLeft = m_bottomLeft.transform(m_trans);
+
+    int ma = (_topRight.x() - _bottomLeft.x()) / 2;
+    int mb = (_topRight.y() - _bottomLeft.y()) / 2;
+    
+    return (pts.x() - _center.x()) * (pts.x() - _center.x()) * (mb * mb)+ (pts.y() - _center.y()) * (pts.y() - _center.y()) *  (ma * ma)  <=  (ma * ma) *  (mb * mb);
 }
