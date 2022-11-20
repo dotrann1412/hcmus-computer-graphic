@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -88,7 +88,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,23 +150,17 @@
     <ClCompile Include="app\objects\Arrow.cpp" />
     <ClCompile Include="app\objects\Circle.cpp" />
     <ClCompile Include="app\objects\Color.cpp" />
-    <ClCompile Include="app\objects\Divide.cpp" />
     <ClCompile Include="app\objects\Elipse.cpp" />
-    <ClCompile Include="app\objects\Hexagon.cpp" />
     <ClCompile Include="app\objects\Line.cpp" />
-    <ClCompile Include="app\objects\menu_entry.cpp" />
-    <ClCompile Include="app\objects\Minus.cpp" />
-    <ClCompile Include="app\objects\Pentagon.cpp" />
-    <ClCompile Include="app\objects\Plus.cpp" />
     <ClCompile Include="app\objects\Point.cpp" />
     <ClCompile Include="app\objects\Rectangle.cpp" />
     <ClCompile Include="app\objects\Shape.cpp" />
     <ClCompile Include="app\objects\Square.cpp" />
-    <ClCompile Include="app\objects\Star.cpp" />
-    <ClCompile Include="app\objects\Times.cpp" />
     <ClCompile Include="app\objects\Triangle.cpp" />
     <ClCompile Include="app\utils\path.cpp" />
+    <ClCompile Include="app\utils\renderer.cpp" />
     <ClCompile Include="app\utils\screen.cpp" />
+    <ClCompile Include="app\utils\string_tokenizer.cpp" />
     <ClCompile Include="app\utils\timer.cpp" />
     <ClCompile Include="app\utils\utils.cpp" />
   </ItemGroup>
@@ -176,23 +169,17 @@
     <ClInclude Include="app\objects\Arrow.h" />
     <ClInclude Include="app\objects\Circle.h" />
     <ClInclude Include="app\objects\Color.h" />
-    <ClInclude Include="app\objects\Divide.h" />
     <ClInclude Include="app\objects\Elipse.h" />
-    <ClInclude Include="app\objects\Hexagon.h" />
     <ClInclude Include="app\objects\Line.h" />
-    <ClInclude Include="app\objects\menu_entry.h" />
-    <ClInclude Include="app\objects\Minus.h" />
-    <ClInclude Include="app\objects\Pentagon.h" />
-    <ClInclude Include="app\objects\Plus.h" />
     <ClInclude Include="app\objects\Point.h" />
     <ClInclude Include="app\objects\Rectangle.h" />
     <ClInclude Include="app\objects\Shape.h" />
     <ClInclude Include="app\objects\Square.h" />
-    <ClInclude Include="app\objects\Star.h" />
-    <ClInclude Include="app\objects\Times.h" />
     <ClInclude Include="app\objects\Triangle.h" />
     <ClInclude Include="app\utils\path.h" />
+    <ClInclude Include="app\utils\renderer.h" />
     <ClInclude Include="app\utils\screen.h" />
+    <ClInclude Include="app\utils\string_tokenizer.h" />
     <ClInclude Include="app\utils\timer.h" />
     <ClInclude Include="app\utils\utils.h" />
   </ItemGroup>
