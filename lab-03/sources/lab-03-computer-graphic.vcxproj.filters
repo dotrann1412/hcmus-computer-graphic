@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="app\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="app\utils\path.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -60,28 +57,31 @@
     <ClCompile Include="app\objects\Triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="app\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\objects\menu_entry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\objects\Pentagon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\objects\Star.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="app\objects\Divide.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="app\objects\Hexagon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\objects\menu_entry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="app\objects\Minus.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="app\objects\Pentagon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="app\objects\Plus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\objects\Star.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="app\objects\Times.cpp">
+    <ClCompile Include="app\objects\times.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -131,16 +131,10 @@
     <ClInclude Include="app\utils\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="app\objects\Divide.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="app\objects\Hexagon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="app\objects\menu_entry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="app\objects\Minus.h">
+    <ClInclude Include="app\objects\Star.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="app\objects\Pentagon.h">
@@ -149,10 +143,16 @@
     <ClInclude Include="app\objects\Plus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="app\objects\Star.h">
+    <ClInclude Include="app\objects\Divide.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="app\objects\Times.h">
+    <ClInclude Include="app\objects\Minus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\objects\times.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\objects\Hexagon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

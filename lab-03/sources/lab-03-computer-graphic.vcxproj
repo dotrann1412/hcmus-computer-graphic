@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{db3bb798-edc6-4ad9-b70b-223a85346495}</ProjectGuid>
-    <RootNamespace>lab02computergraphic</RootNamespace>
+    <RootNamespace>lab03computergraphic</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -149,7 +149,6 @@
     <ClCompile Include="app\objects\Color.cpp" />
     <ClCompile Include="app\objects\Divide.cpp" />
     <ClCompile Include="app\objects\Elipse.cpp" />
-    <ClCompile Include="app\objects\helpers.cpp" />
     <ClCompile Include="app\objects\Hexagon.cpp" />
     <ClCompile Include="app\objects\Line.cpp" />
     <ClCompile Include="app\objects\menu_entry.cpp" />
@@ -175,7 +174,6 @@
     <ClInclude Include="app\objects\Color.h" />
     <ClInclude Include="app\objects\Divide.h" />
     <ClInclude Include="app\objects\Elipse.h" />
-    <ClInclude Include="app\objects\helpers.h" />
     <ClInclude Include="app\objects\Hexagon.h" />
     <ClInclude Include="app\objects\Line.h" />
     <ClInclude Include="app\objects\menu_entry.h" />
