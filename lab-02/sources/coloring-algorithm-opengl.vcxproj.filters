@@ -21,7 +21,13 @@
     <ClCompile Include="app\utils\path.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="app\utils\renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="app\utils\screen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\utils\string_tokenizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="app\utils\timer.cpp">
@@ -60,30 +66,6 @@
     <ClCompile Include="app\objects\Triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\objects\Divide.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="app\objects\Hexagon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="app\objects\menu_entry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="app\objects\Minus.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="app\objects\Pentagon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="app\objects\Plus.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="app\objects\Star.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="app\objects\Times.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\objects\all.h">
@@ -113,6 +95,9 @@
     <ClInclude Include="app\objects\Rectangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="app\utils\renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="app\utils\screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -122,6 +107,9 @@
     <ClInclude Include="app\objects\Square.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="app\utils\string_tokenizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="app\utils\timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -129,30 +117,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="app\utils\utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="app\objects\Divide.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="app\objects\Hexagon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="app\objects\menu_entry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="app\objects\Minus.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="app\objects\Pentagon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="app\objects\Plus.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="app\objects\Star.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="app\objects\Times.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
