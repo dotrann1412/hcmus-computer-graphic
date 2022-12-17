@@ -1,11 +1,13 @@
 #include "Circle.h"
 
+#include <algorithm>
+
 Circle::Circle(const Point& rect_start, const Point& rect_end, const Color& boundary_color, const Color& fill_color)
 	: Elipse(rect_start, rect_end, boundary_color, fill_color) {
-    int32_t side = std::min(m_topRight.x() - m_bottomLeft.x(), m_topRight.y() - m_bottomLeft.y());
+    int32_t side = min(m_topRight.x() - m_bottomLeft.x(), m_topRight.y() - m_bottomLeft.y());
     m_bottomLeft = { m_bottomLeft.x(), m_topRight.y() - side };
     m_topRight = { m_bottomLeft.x() + side, m_topRight.y() };
-	this->m_a = this->m_b = std::min(this->m_a, this->m_b);
+	this->m_a = this->m_b = min(this->m_a, this->m_b);
 }
 
 Circle::Circle(const Circle& another) 
