@@ -11,6 +11,27 @@ void Screen::display()
 	glMatrixMode(GL_MODELVIEW); // To operate on model-view matrix
 	// Render a color-cube consisting of 6 quads with different colors
 	glLoadIdentity(); // Reset the model-view matrix
+
+	glLineWidth(5);
+	glTranslatef(1.5f, 0.0f, -7.0f);
+	glBegin(GL_LINES);
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(300.0, 0.0, 0.0);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glColor3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(0.0, 300.0, 0.0);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glColor3f(0.0, 0.0, 1.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(0.0, 0.0, 300.0);
+	glEnd();
+
 	glTranslatef(1.5f, 0.0f, -7.0f); // Move right and into the screen
 	glBegin(GL_QUADS); // Begin drawing the color cube with 6 quads
 		// Top face (y = 1.0f)
@@ -77,10 +98,10 @@ void Screen::display()
 		glVertex3f(-1.0f, -1.0f, 1.0f);
 	glEnd(); // Done drawing the pyramid
 
-	glLoadIdentity(); // Reset the model-view matrix
-	glBegin(GL_POINT);
-	glVertex3f(-2.0f, -2.0f, 2.0f);
-	glEnd();
+	//glLoadIdentity(); // Reset the model-view matrix
+	//glBegin(GL_POINT);
+	//glVertex3f(-2.0f, -2.0f, 2.0f);
+	//glEnd();
 	
 
 	glutSwapBuffers(); // Swap the front and back frame buffers (double buffering)
