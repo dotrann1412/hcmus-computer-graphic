@@ -1,9 +1,9 @@
 #ifndef __PLUS_H__
 #define __PLUS_H__
 
-#include "Shape.h"
+#include "Shape2D.h"
 
-class Plus: public Shape
+class Plus: public Shape2D
 {
 public:
 	Plus(const Point& rect_start, const Point& rect_end,  const Color& boundary_color = Color::BLACK, const Color& fill_color = Color::WHITE);

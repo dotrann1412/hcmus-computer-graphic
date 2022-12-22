@@ -1,14 +1,14 @@
 #include "Elipse.h"
 
 Elipse::Elipse(const Point& rect_start, const Point& rect_end, const Color& boundary_color, const Color& fill_color)
-	: Shape(rect_start, rect_end, boundary_color, fill_color) {
+	: Shape2D(rect_start, rect_end, boundary_color, fill_color) {
 	this->m_center = {(m_bottomLeft.x() + m_topRight.x()) / 2, (m_bottomLeft.y() + m_topRight.y()) / 2};
 	this->m_a = (m_topRight.x() - m_bottomLeft.x()) / 2;
 	this->m_b = (m_topRight.y() - m_bottomLeft.y()) / 2;
 }
 
 Elipse::Elipse(const Elipse& another)
-	: Shape(another) {
+	: Shape2D(another) {
 
 }
 
@@ -152,14 +152,14 @@ void Elipse::unbound() {
 
 void Elipse::setBoundary(const Point& first, const Point& second)
 {
-    Shape::setBoundary(first, second);
+    Shape2D::setBoundary(first, second);
     this->m_center = {(m_bottomLeft.x() + m_topRight.x()) / 2, (m_bottomLeft.y() + m_topRight.y()) / 2};
 	this->m_a = (m_topRight.x() - m_bottomLeft.x()) / 2;
 	this->m_b = (m_topRight.y() - m_bottomLeft.y()) / 2;
 }
 
 bool Elipse::contain(const Point& pts) {
-    if (!Shape::contain(pts))
+    if (!Shape2D::contain(pts))
         return false;
     
     Point _center = m_center.transform(m_trans);

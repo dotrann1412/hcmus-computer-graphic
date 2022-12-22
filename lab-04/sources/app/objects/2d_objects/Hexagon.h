@@ -1,9 +1,9 @@
 #ifndef __HEXAGON_H__
 #define __HEXAGON_H__
 
-#include "Shape.h"
+#include "Shape2D.h"
 
-class Hexagon: public Shape
+class Hexagon: public Shape2D
 {
 public:
 	Hexagon(const Point& rect_Hexagont, const Point& rect_end,  const Color& boundary_color = Color::BLACK, const Color& fill_color = Color::WHITE);

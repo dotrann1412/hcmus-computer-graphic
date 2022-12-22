@@ -1,9 +1,9 @@
 #ifndef __PENTAGON_H__
 #define __PENTAGON_H__
 
-#include "Shape.h"
+#include "Shape2D.h"
 
-class Pentagon: public Shape
+class Pentagon: public Shape2D
 {
 public:
 	Pentagon(const Point& rect_Pentagont, const Point& rect_end,  const Color& boundary_color = Color::BLACK, const Color& fill_color = Color::WHITE);

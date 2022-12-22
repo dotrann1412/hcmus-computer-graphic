@@ -1,9 +1,9 @@
 #ifndef __DIVIDE_H__
 #define __DIVIDE_H__
 
-#include "Shape.h"
+#include "Shape2D.h"
 
-class Divide: public Shape
+class Divide: public Shape2D
 {
 public:
 	Divide(const Point& rect_start, const Point& rect_end,  const Color& boundary_color = Color::BLACK, const Color& fill_color = Color::WHITE);

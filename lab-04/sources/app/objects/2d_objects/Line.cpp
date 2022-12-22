@@ -1,17 +1,17 @@
 #include "Line.h"
 #include <iostream>
 
-Line::Line(): Shape({0, 0}, {0, 0}) {
+Line::Line(): Shape2D({0, 0}, {0, 0}) {
 	this->m_start = this->m_end = Point(0, 0);
 }
 
 Line::Line(const Point& a, const Point& b, const Color& boundary_color, const Color& fill_color)
-	: Shape(a, b, boundary_color, fill_color) {
+	: Shape2D(a, b, boundary_color, fill_color) {
 	this->m_start = a;
 	this->m_end = b;
 }
 
-Line::Line(const Line& another): Shape(another) {
+Line::Line(const Line& another): Shape2D(another) {
 	this->m_start = another.m_start;
 	this->m_end = another.m_end;
 }
@@ -49,11 +49,11 @@ float Line::length() const {
 
 void Line::render() const {
     glPointSize(m_pointSize);
-	Shape::bresenham(m_start, m_end);
+	Shape2D::bresenham(m_start, m_end);
 }
 
 void Line::unbound() {
-	Shape::bresenham_rev(m_start, m_end);
+	Shape2D::bresenham_rev(m_start, m_end);
 }
 
 void Line::setBoundary(const Point& first, const Point& second) {
@@ -64,5 +64,5 @@ void Line::setBoundary(const Point& first, const Point& second) {
 
 bool Line::contain(const Point& pts) {
 	const static float K = 1;
-	return Shape::contain(pts) && abs(pts.x() - m_start.x()) * (m_end.y() - m_start.y()) - (pts.y() - m_start.y()) * (m_end.y() - m_start.y()) < K;
+	return Shape2D::contain(pts) && abs(pts.x() - m_start.x()) * (m_end.y() - m_start.y()) - (pts.y() - m_start.y()) * (m_end.y() - m_start.y()) < K;
 }

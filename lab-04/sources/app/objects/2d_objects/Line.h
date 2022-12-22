@@ -6,9 +6,9 @@
 
 #include "Point.h"
 
-#include "Shape.h"
+#include "Shape2D.h"
 
-class Line: public Shape
+class Line: public Shape2D
 {
 private:
 	Point m_start, m_end;

@@ -15,7 +15,7 @@ Square::Square(const Square& another)
 }
 
 void Square::setBoundary(const Point& first, const Point& last) {
-	Shape::setBoundary(first, last);
+	Shape2D::setBoundary(first, last);
 	int32_t side = std::min(m_topRight.x() - m_bottomLeft.x(), m_topRight.y() - m_bottomLeft.y());
 	m_bottomLeft = {m_bottomLeft.x(), m_topRight.y() - side};
 	m_topRight = {m_bottomLeft.x() + side, m_topRight.y()};

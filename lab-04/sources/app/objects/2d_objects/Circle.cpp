@@ -92,5 +92,5 @@ void Circle::setBoundary(const Point& first, const Point& second)
 bool Circle::contain(const Point& pts) {
     Point _center = m_center.transform(m_trans);
     int _radius = Point(_center.x(), m_topRight.y()).transform(m_trans).y() - _center.y();
-	return Shape::contain(pts) && (pts.x() - _center.x()) * (pts.x() - _center.x()) + (pts.y() - _center.y()) * (pts.y() - _center.y()) <= _radius * _radius;
+	return Shape2D::contain(pts) && (pts.x() - _center.x()) * (pts.x() - _center.x()) + (pts.y() - _center.y()) * (pts.y() - _center.y()) <= _radius * _radius;
 }

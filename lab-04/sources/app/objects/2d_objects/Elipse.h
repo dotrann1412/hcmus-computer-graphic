@@ -1,9 +1,9 @@
 #ifndef __ELIPSE_H__
 #define __ELIPSE_H__
 
-#include "Shape.h"
+#include "Shape2D.h"
 
-class Elipse: public Shape
+class Elipse: public Shape2D
 {
 public:
 	Elipse(const Point& rect_start, const Point& rect_end,  

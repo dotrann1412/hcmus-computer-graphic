@@ -1,9 +1,9 @@
 #ifndef __STAR_H__
 #define __STAR_H__
 
-#include "Shape.h"
+#include "Shape2D.h"
 
-class Star: public Shape
+class Star: public Shape2D
 {
 public:
 	Star(const Point& rect_start, const Point& rect_end,  const Color& boundary_color = Color::BLACK, const Color& fill_color = Color::WHITE);

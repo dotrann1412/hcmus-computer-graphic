@@ -3,12 +3,12 @@
 
 Star::Star(const Point& rect_start, const Point& rect_end, 
     const Color& boundary_color, const Color& fill_color) 
-: Shape (rect_start, rect_end, boundary_color, fill_color) {
+: Shape2D (rect_start, rect_end, boundary_color, fill_color) {
 
 }
 
 Star::Star(const Star& another)
-: Shape (another) {
+: Shape2D (another) {
 
 }
 
@@ -36,7 +36,7 @@ void Star::render() const {
 }
 
 bool Star::contain(const Point& point) {
-    if (!Shape::contain(point))
+    if (!Shape2D::contain(point))
         return false;
     std::vector<Line> line = {};
     int h_side = m_topRight.y() - m_bottomLeft.y(), v_side = m_topRight.x() - m_bottomLeft.x();
@@ -60,7 +60,7 @@ bool Star::contain(const Point& point) {
 }
 
 void Star::setBoundary(const Point& first, const Point& second) {
-    Shape::setBoundary (first, second);
+    Shape2D::setBoundary (first, second);
 }
 
 void Star::unbound() {

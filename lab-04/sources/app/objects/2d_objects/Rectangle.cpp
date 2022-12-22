@@ -2,12 +2,12 @@
 
 
 Rectangle::Rectangle(const Point& rect_start, const Point& rect_end, const Color& boundary_color, const Color& fill_color) 
-	: Shape(rect_start, rect_end, boundary_color, fill_color) {
+	: Shape2D(rect_start, rect_end, boundary_color, fill_color) {
 
 }
 
 Rectangle::Rectangle(const Rectangle& another) 
-	: Shape(another) {
+	: Shape2D(another) {
 
 }
 
@@ -35,5 +35,5 @@ void Rectangle::unbound() {
 }
 
 bool Rectangle::contain(const Point& point) {
-	return Shape::contain(point);
+	return Shape2D::contain(point);
 }

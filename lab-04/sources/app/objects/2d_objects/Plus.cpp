@@ -3,12 +3,12 @@
 
 Plus::Plus(const Point& rect_start, const Point& rect_end, 
     const Color& boundary_color, const Color& fill_color) 
-: Shape (rect_start, rect_end, boundary_color, fill_color) {
+: Shape2D (rect_start, rect_end, boundary_color, fill_color) {
 
 }
 
 Plus::Plus(const Plus& another)
-: Shape (another) {
+: Shape2D (another) {
 
 }
 
@@ -38,7 +38,7 @@ void Plus::render() const {
 }
 
 bool Plus::contain(const Point& point) {
-    if (!Shape::contain(point))
+    if (!Shape2D::contain(point))
         return false;
     std::vector<Line> line = {};
     int h_side = m_topRight.y() - m_bottomLeft.y(), v_side = m_topRight.x() - m_bottomLeft.x();
@@ -64,7 +64,7 @@ bool Plus::contain(const Point& point) {
 }
 
 void Plus::setBoundary(const Point& first, const Point& second) {
-    Shape::setBoundary (first, second);
+    Shape2D::setBoundary (first, second);
 }
 
 void Plus::unbound() {

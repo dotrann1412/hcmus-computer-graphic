@@ -3,12 +3,12 @@
 #include <vector>
 
 Triangle::Triangle(const Point& rect_start, const Point& rect_end, const Color& boundary_color, const Color& fill_color) 
-	: Shape(rect_start, rect_end, boundary_color, fill_color) {
+	: Shape2D(rect_start, rect_end, boundary_color, fill_color) {
 
 }
 
 Triangle::Triangle(const Triangle& another) 
-	: Shape(another) {
+	: Shape2D(another) {
 
 }
 
@@ -42,7 +42,7 @@ void Triangle::unbound() {
 }
 
 bool Triangle::contain(const Point& point) {
-    if (!Shape::contain(point))
+    if (!Shape2D::contain(point))
         return false;
     
 	std::vector<Line> line = {};

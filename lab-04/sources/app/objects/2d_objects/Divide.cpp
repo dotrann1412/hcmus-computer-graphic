@@ -3,12 +3,12 @@
 
 Divide::Divide(const Point& rect_start, const Point& rect_end, 
     const Color& boundary_color, const Color& fill_color) 
-: Shape (rect_start, rect_end, boundary_color, fill_color) {
+: Shape2D (rect_start, rect_end, boundary_color, fill_color) {
 
 }
 
 Divide::Divide(const Divide& another)
-: Shape (another) {
+: Shape2D (another) {
 
 }
 
@@ -30,7 +30,7 @@ void Divide::render() const {
 }
 
 bool Divide::contain(const Point& point) {
-    if (!Shape::contain(point))
+    if (!Shape2D::contain(point))
         return false;
     int h_side = m_topRight.y() - m_bottomLeft.y(), v_side = m_topRight.x() - m_bottomLeft.x();
     
@@ -48,7 +48,7 @@ bool Divide::contain(const Point& point) {
 }
 
 void Divide::setBoundary(const Point& first, const Point& second) {
-    Shape::setBoundary (first, second);
+    Shape2D::setBoundary (first, second);
 }
 
 void Divide::unbound() {

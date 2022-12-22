@@ -1,9 +1,9 @@
 #ifndef __RECTANGLE_H__
 #define __RECTANGLE_H__
 
-#include "Shape.h"
+#include "Shape2D.h"
 
-class Rectangle: public Shape
+class Rectangle: public Shape2D
 {
 public:
 	Rectangle(const Point& rect_start, const Point& rect_end,  const Color& boundary_color = Color::BLACK, const Color& fill_color = Color::WHITE);

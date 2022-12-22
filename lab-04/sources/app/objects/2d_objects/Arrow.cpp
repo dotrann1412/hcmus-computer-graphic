@@ -2,13 +2,13 @@
 #include "Line.h"
 
 Arrow::Arrow(const Point& rect_start, const Point& rect_end,  const Color& boundary_colors, const Color& fill_colors)
-    : Shape(rect_start, rect_end, boundary_colors, fill_colors)
+    : Shape2D(rect_start, rect_end, boundary_colors, fill_colors)
 {
 
 }
 
 Arrow::Arrow(const Arrow& another)
-    : Shape(another)
+    : Shape2D(another)
 {
     
 }
@@ -37,7 +37,7 @@ void Arrow::render() const
 
 bool Arrow::contain(const Point& pts)
 {
-    if (!Shape::contain(pts))
+    if (!Shape2D::contain(pts))
         return false;
 
     int h_side = m_topRight.y() - m_bottomLeft.y(), v_side = m_topRight.x() - m_bottomLeft.x();
@@ -59,7 +59,7 @@ bool Arrow::contain(const Point& pts)
 }
 
 void Arrow::setBoundary(const Point& first, const Point& second) {
-    Shape::setBoundary(first, second);
+    Shape2D::setBoundary(first, second);
 }
 
 void Arrow::unbound() {
