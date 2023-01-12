@@ -13,7 +13,7 @@
 
 using std::cerr;
 
-bool isInt(const string& s) {
+bool isInt(const std::string& s) {
     bool is_negative = s[0] == '-';
 
     if (!s.size())
@@ -30,7 +30,7 @@ bool isInt(const string& s) {
     return true;
 }
 
-bool isFloat(const string& s) {
+bool isFloat(const std::string& s) {
     bool is_negative = false,
          floating_point_detected = false;
     if (!s.size())

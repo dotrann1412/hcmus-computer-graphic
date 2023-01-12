@@ -2,22 +2,33 @@
 #include <memory>
 #include <ctime>
 #include <iostream>
+
 #include "./timer.h"
 
-void Screen::display() 
+#include <SOIL.h>
+
+void Screen::display()
 {
+	static int texture = SOIL_load_OGL_texture
+	(
+		".\\res\\textures\\metal_bmp.bmp",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+	);
+
 	static std::vector<std::shared_ptr<Shape3D>> shapes = {
-		std::shared_ptr<Shape3D>(new Cube({-10, 8, -40 }, {5, 5, 5})),
-		std::shared_ptr<Shape3D>(new Sphere({0, 8, -40 }, {5, 5, 5})),
-		std::shared_ptr<Shape3D>(new Cube({10, 8, -40 }, {5, 5, 5})),
+		std::shared_ptr<Shape3D>(new Torus({0, 0, -40 }, {5, 5, 5}, texture)),
+		std::shared_ptr<Shape3D>(new Cone({0, 8, -40 }, {5, 5, 5}, texture)),
+		std::shared_ptr<Shape3D>(new Cube({0, -8, -40 }, {5, 5, 5}, texture)),
 
-		std::shared_ptr<Shape3D>(new Sphere({-10, 0, -40 }, {5, 5, 5})),
-		std::shared_ptr<Shape3D>(new Cube({0, 0, -40 }, {5, 5, 5})),
-		std::shared_ptr<Shape3D>(new Sphere({10, 0, -40 }, {5, 5, 5})),
+		std::shared_ptr<Shape3D>(new Cylinder({-10, 0, -40}, {5, 5, 5}, texture)),
+		std::shared_ptr<Shape3D>(new Sphere({-10, 8, -40}, {5, 5, 5}, texture)),
+		std::shared_ptr<Shape3D>(new Sphere({10, 0, -40 }, {5, 5, 5}, texture)),
 
-		std::shared_ptr<Shape3D>(new Cube({-10, -8, -40 }, {5, 5, 5})),
-		std::shared_ptr<Shape3D>(new Sphere({0, -8, -40 }, {5, 5, 5})),
-		std::shared_ptr<Shape3D>(new Cube({10, -8, -40 }, {5, 5, 5})),
+		std::shared_ptr<Shape3D>(new Hyperpoloid({-10, -8, -40 }, {5, 5, 5}, texture)),
+		std::shared_ptr<Shape3D>(new Cylinder({10, 8, -40 }, {5, 5, 5}, texture)),
+		std::shared_ptr<Shape3D>(new Hyperpoloid({10, -8, -40 }, {5, 5, 5}, texture)),
 	};
 	
 
@@ -25,7 +36,6 @@ void Screen::display()
 	glMatrixMode(GL_MODELVIEW); // To operate on model-view matrix
 
 	for (auto x : shapes) {
-		glColor3ub(255, 255, 0);
 		x->render();
 		x->rotate(0.02, 0.02, 0.02);
 	}
@@ -41,15 +51,15 @@ Screen::Screen(char** argv, int argc) {
 	glutCreateWindow("DEMO"); // Create window with the given title
 	glutDisplayFunc(Screen::display); // Register callback handler for window re-paint event
 	glutReshapeFunc(Screen::onScreenSizeChanged);
-	// glutMotionFunc(Screen::onMouseMotion);
 	glutTimerFunc(0, Screen::onIdle, 0);
 	glut_initialize();
 	glutMainLoop();
+
 }
 
 void Screen::onIdle(int) {
 	glutPostRedisplay();
-	glutTimerFunc(20, Screen::onIdle, 0);
+	glutTimerFunc(40, Screen::onIdle, 0);
 }
 
 Screen::~Screen() {
@@ -60,24 +70,6 @@ Screen* Screen::show(char** args_v, int args_c) {
 	if (k_instance)
 		return k_instance;
 	return k_instance = new Screen(args_v, args_c);
-}
-
-void Screen::shape_menu(int code) {
-	if (code == 4) {
-		delete k_instance;
-		exit(0);
-	}
-
-	k_menuSlots[code]();
-}
-
-void Screen::menu(int code) {
-	if (code == 4) {
-		delete k_instance;
-		exit(0);
-	}
-
-	k_menuSlots[code]();
 }
 
 void Screen::close() {
@@ -93,6 +85,7 @@ void Screen::glut_initialize() {
 	glDepthFunc(GL_LEQUAL); // Set the type of depth-test
 	glShadeModel(GL_SMOOTH); // Enable smooth shading
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Nice perspective corrections
+	glEnable(GL_TEXTURE_2D);
 }
 
 void Screen::onScreenSizeChanged(int w, int h) {
@@ -108,124 +101,11 @@ void Screen::onScreenSizeChanged(int w, int h) {
 	gluPerspective(45.0f, aspect, 0.1f, 100.0f);
 }
 
-void Screen::onMouseEvent(int btn, int state, int x, int y) {
-
-}
-
-void Screen::onMouseMovement(int x, int y) {
-	
-}
-
-void Screen::onMouseMotion(int x, int y) {
-
-}
-
-void Screen::onKeyBoardEvent_Extend(int key, int x, int y) {
-	if (k_selectedIndex >= 0 && k_selectedIndex < k_shapes.size()) {
-		switch (key)
-		{
-			
-			default:
-				break;
-		}
-	}
-}
-
-void Screen::onKeyBoardEvent(uint8_t key, int x, int y) {
-	if (k_selectedIndex >= 0 && k_selectedIndex < k_shapes.size()) {
-		switch (key)
-		{
-		
-		default:
-			break;
-		}
-	}
-}
-
-std::map<int,  std::function<void()>> Screen::buildMenuEntries () {
-	std::map<int,  std::function<void()>> res;
-
-	std::vector<std::pair<std::string, std::function<void()>>> shapes_list = {
-
-	};
-
-	std::vector<std::pair<std::string, std::function<void()>>> colors_list = {
-		
-	};
-
-	std::vector<std::pair<std::string, std::function<void()>>> root_entry = {
-		{"Clear", [&]() {
-			glutPostRedisplay();
-		}},
-		{"Choose shape", []() {}},
-		{"Choose color", []() {}},
-		{"Exit", [&] () {}},
-	};
-
-	int iter = 10;
-
-	int shape_menu_id = glutCreateMenu(menu);
-	
-	for (int i = 0; i < shapes_list.size(); ++i) {
-		res[iter] = shapes_list[i].second;
-		glutAddMenuEntry(shapes_list[i].first.c_str(), iter++);
-	}
-
-	int color_menu_id = glutCreateMenu(menu);
-
-	for (int i = 0; i < colors_list.size(); ++i) {
-		res[iter] = colors_list[i].second;
-		glutAddMenuEntry(colors_list[i].first.c_str(), iter++);
-	}
-
-	k_menu_id = glutCreateMenu(menu);
-
-	glutAddMenuEntry(root_entry[0].first.c_str(), 0);
-	res[0] = root_entry[0].second;
-
-	glutAddSubMenu(root_entry[1].first.c_str(), shape_menu_id);
-
-	glutAddSubMenu(root_entry[2].first.c_str(), color_menu_id);
-
-	glutAddMenuEntry(root_entry[3].first.c_str(), 4);
-	// res[4] = root_entry[4].second;
-
-	glutAttachMenu(GLUT_RIGHT_BUTTON);
-
-	return res;
-};
 
 Screen* Screen::k_instance = nullptr;
-
-int Screen::k_menu_id;
-
-int Screen::k_choice;
-
-int Screen::k_mouse_btn;
-
-int Screen::k_mouse_state;
-
-Point Screen::k_pressed;
-
-
-Color Screen::k_selectedColor = Color::CYAN;
 
 const int Screen::WINDOW_HEIGHT = 480;
 
 const int Screen::WINDOW_WIDTH = 640;
 
 std::vector<std::shared_ptr<Shape3D>> Screen::k_shapes;
-
-std::map<int,  std::function<void()>> Screen::k_menuSlots;
-
-int Screen::k_hasSelection = true;
-
-int Screen::k_selectedIndex = -1;
-
-float Screen::k_rotationState = 0;
-
-std::function<void()> Screen::changeCurrentSelectedColor = []() {
-	
-};
-
-const Point3i Screen::CAMERA_POSITION = {0, 0, 0};
