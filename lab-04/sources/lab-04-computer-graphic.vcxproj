@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{db3bb798-edc6-4ad9-b70b-223a85346495}</ProjectGuid>
-    <RootNamespace>lab03computergraphic</RootNamespace>
+    <ProjectGuid>{7091ef3f-18f5-41b5-a211-a6e3722b358d}</ProjectGuid>
+    <RootNamespace>lab04computergraphic</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -75,6 +75,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>G:\Project\hcmus-computer-graphic\lab-04\sources\app\externals\Simple-OpenGL-Image-Library\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -100,9 +101,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,8 +119,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,54 +142,49 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="app\externals\Simple-OpenGL-Image-Library\src\image_DXT.c" />
+    <ClCompile Include="app\externals\Simple-OpenGL-Image-Library\src\image_helper.c" />
+    <ClCompile Include="app\externals\Simple-OpenGL-Image-Library\src\SOIL.c" />
+    <ClCompile Include="app\externals\Simple-OpenGL-Image-Library\src\stb_image_aug.c" />
+    <ClCompile Include="app\externals\Simple-OpenGL-Image-Library\src\test_SOIL.cpp" />
     <ClCompile Include="app\main.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Arrow.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Circle.cpp" />
-    <ClCompile Include="app\objects/commons\Color.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Divide.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Elipse.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Hexagon.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Line.cpp" />
-    <ClCompile Include="app\objects/2d_objects\menu_entry.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Minus.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Pentagon.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Plus.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Point.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Rectangle.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Shape.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Square.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Star.cpp" />
-    <ClCompile Include="app\objects/2d_objects\times.cpp" />
-    <ClCompile Include="app\objects/2d_objects\Triangle.cpp" />
+    <ClCompile Include="app\objects\Cone.cpp" />
+    <ClCompile Include="app\objects\Cube.cpp" />
+    <ClCompile Include="app\objects\Cylinder.cpp" />
+    <ClCompile Include="app\objects\Hyperpoloid.cpp" />
+    <ClCompile Include="app\objects\Point3i.cpp" />
+    <ClCompile Include="app\objects\RoundedCone.cpp" />
+    <ClCompile Include="app\objects\shape3D.cpp" />
+    <ClCompile Include="app\objects\Sphere.cpp" />
+    <ClCompile Include="app\objects\Torus.cpp" />
+    <ClCompile Include="app\objects\Color.cpp" />
+    <ClCompile Include="app\utils\helpers.cpp" />
     <ClCompile Include="app\utils\path.cpp" />
     <ClCompile Include="app\utils\screen.cpp" />
     <ClCompile Include="app\utils\timer.cpp" />
-    <ClCompile Include="app\utils\helpers.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="app\objects\2d_objects/all.h" />
-    <ClInclude Include="app\objects/2d_objects\Arrow.h" />
-    <ClInclude Include="app\objects/2d_objects\Circle.h" />
-    <ClInclude Include="app\objects/2d_objects\commons\Color.h" />
-    <ClInclude Include="app\objects/2d_objects\Divide.h" />
-    <ClInclude Include="app\objects/2d_objects\Elipse.h" />
-    <ClInclude Include="app\objects/2d_objects\Hexagon.h" />
-    <ClInclude Include="app\objects/2d_objects\Line.h" />
-    <ClInclude Include="app\objects/2d_objects\menu_entry.h" />
-    <ClInclude Include="app\objects/2d_objects\Minus.h" />
-    <ClInclude Include="app\objects/2d_objects\Pentagon.h" />
-    <ClInclude Include="app\objects/2d_objects\Plus.h" />
-    <ClInclude Include="app\objects/2d_objects\Point.h" />
-    <ClInclude Include="app\objects/2d_objects\Rectangle.h" />
-    <ClInclude Include="app\objects/2d_objects\Shape.h" />
-    <ClInclude Include="app\objects/2d_objects\Square.h" />
-    <ClInclude Include="app\objects/2d_objects\Star.h" />
-    <ClInclude Include="app\objects/2d_objects\times.h" />
-    <ClInclude Include="app\objects/2d_objects\Triangle.h" />
+    <ClInclude Include="app\externals\Simple-OpenGL-Image-Library\src\image_DXT.h" />
+    <ClInclude Include="app\externals\Simple-OpenGL-Image-Library\src\image_helper.h" />
+    <ClInclude Include="app\externals\Simple-OpenGL-Image-Library\src\SOIL.h" />
+    <ClInclude Include="app\externals\Simple-OpenGL-Image-Library\src\stbi_DDS_aug.h" />
+    <ClInclude Include="app\externals\Simple-OpenGL-Image-Library\src\stbi_DDS_aug_c.h" />
+    <ClInclude Include="app\externals\Simple-OpenGL-Image-Library\src\stb_image_aug.h" />
+    <ClInclude Include="app\objects\all.h" />
+    <ClInclude Include="app\objects\Cone.h" />
+    <ClInclude Include="app\objects\Cube.h" />
+    <ClInclude Include="app\objects\Cylinder.h" />
+    <ClInclude Include="app\objects\Hyperpoloid.h" />
+    <ClInclude Include="app\objects\Point3i.h" />
+    <ClInclude Include="app\objects\RoundedCone.h" />
+    <ClInclude Include="app\objects\Shape3D.h" />
+    <ClInclude Include="app\objects\Sphere.h" />
+    <ClInclude Include="app\objects\Torus.h" />
+    <ClInclude Include="app\objects\Color.h" />
+    <ClInclude Include="app\utils\helpers.h" />
     <ClInclude Include="app\utils\path.h" />
     <ClInclude Include="app\utils\screen.h" />
     <ClInclude Include="app\utils\timer.h" />
-    <ClInclude Include="app\utils\helpers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
