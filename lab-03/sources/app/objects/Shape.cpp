@@ -10,7 +10,7 @@ template<class T>
 std::vector<std::vector<T>> operator * (const std::vector<std::vector<T>>& aa, const std::vector<std::vector<T>>& bb) {
     assert(aa[0].size() == bb.size());
 
-    std::vector<std::vector<T>> res(aa.size(), std::vector<double>(bb[0].size(), 0));
+    std::vector<std::vector<T>> res(aa.size(), std::vector<T>(bb[0].size(), 0));
     for (int i = 0; i < aa.size(); ++i) {
         for (int j = 0; j < bb.size(); ++j) {
             for (int k = 0; k < aa[i].size(); ++k) {
@@ -19,7 +19,7 @@ std::vector<std::vector<T>> operator * (const std::vector<std::vector<T>>& aa, c
         }
     }
 
-    return res;
+    return res; 
 }
 
 Shape::Shape(const Point& rect_start, const Point& rect_end, const Color& boundary_colr, const Color& fill_color) {
