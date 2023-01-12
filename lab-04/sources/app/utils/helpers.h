@@ -13,12 +13,12 @@
 // - point: integer
 // - length or distance: float
 
-#include "../objects/2d_objects/Point.h"
-#include "../objects/commons/Color.h"
+#include "../objects/Color.h"
 #include <vector>
+#include <string>
 
-bool isInt(const string& s);
-bool isFloat(const string& s);
+bool isInt(const std::string& s);
+bool isFloat(const std::string& s);
 
 /////// quick io
 template <class T> 

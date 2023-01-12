@@ -49,9 +49,12 @@ lab-03/sources/x64/**
 lab-03/sources/Release/**
 lab-03/sources/.vs/**
 lab-03/sources/.vscode/**
+lab-03/submission/**
 
 lab-04/sources/Debug/**
 lab-04/sources/x64/**
 lab-04/sources/Release/**
 lab-04/sources/.vs/**
 lab-04/sources/.vscode/**
+lab-04/sources/app/externals/**
+lab-04/submission/**

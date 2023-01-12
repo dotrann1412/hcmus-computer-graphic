@@ -1,2 +1,3 @@
-# hcmus-computer-graphic
-Store all personal submissions, course id: CSC16001
+# HCMUS - Computer Graphic
+
+This repo is used to store all my submissions during the course.
