@@ -6,7 +6,7 @@
 class Sphere : public Shape3D {
 public:
 	Sphere();
-	Sphere(const Point3i& pos, const std::vector<int>& sides);
+	Sphere(const Point3i& pos, const std::vector<int>& sides, const int& texture);
 	Sphere(const Sphere& another);
 
 	~Sphere();

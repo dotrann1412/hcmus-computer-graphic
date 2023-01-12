@@ -3,10 +3,10 @@
 
 #include "Shape3D.h"
 
-class Cylinder : Shape3D {
+class Cylinder : public Shape3D {
 public:
 	Cylinder();
-	Cylinder(const Point3i& pos, const std::vector<int>& sides);
+	Cylinder(const Point3i& pos, const std::vector<int>& sides, const int& texture);
 	Cylinder(const Cylinder& another);
 
 	void render();

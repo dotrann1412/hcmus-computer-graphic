@@ -1,14 +1,14 @@
 #include "Sphere.h"
 
-const int Sphere::SECTOR_COUNT = 16;
-const int Sphere::STACK_COUNT = 16;
+const int Sphere::SECTOR_COUNT = 32;
+const int Sphere::STACK_COUNT = 32;
 
 Sphere::Sphere() : Shape3D() {
 
 }
 
-Sphere::Sphere(const Point3i& pos, const std::vector<int>& sides) 
-: Shape3D(pos, sides) {
+Sphere::Sphere(const Point3i& pos, const std::vector<int>& sides, const int& texture) 
+: Shape3D(pos, sides, texture) {
 	int m = min(xSide, min(ySide, zSide));
 }
 
@@ -21,9 +21,11 @@ Sphere::~Sphere() {
 
 }
 
+#include <iostream>
 
 void Sphere::render() 
 {
+	Shape3D::render();
 	glLoadIdentity();
 
 	Point3i pts = center();
@@ -38,9 +40,8 @@ void Sphere::render()
 	
 	float sectorAngle, stackAngle;
 	
-	glBegin(GL_TRIANGLES);
-
-	static std::vector<int> state = { 0, 1 };
+	glBegin(GL_QUADS);
+	glBindTexture(GL_TEXTURE_2D, mTexture);
 	
 	auto process = [&] (int ii, int jj) {
 		stackAngle = PI / 2 - ii * stackStep;
@@ -52,15 +53,18 @@ void Sphere::render()
 	Point3i p;
 	for (int i = 0; i < STACK_COUNT; ++i) {
 		for (int j = 0; j < SECTOR_COUNT; ++j) {
-			glColor3ub(255, 128, 128);
-			process(i, j);
-			process(i, (j + 1) % SECTOR_COUNT);
-			process((i + 1) % STACK_COUNT, j);
 
-			glColor3ub(128, 255, 128);
+			glTexCoord2f(1.0 * i / STACK_COUNT, 1.0 * j / SECTOR_COUNT);
+			process(i, j);
+
+			glTexCoord2f(1.0 * i / STACK_COUNT, 1.0 * (j + 1) / SECTOR_COUNT);
 			process(i, (j + 1) % SECTOR_COUNT);
-			process((i + 1) % STACK_COUNT, j);
+
+			glTexCoord2f(1.0 * (i + 1) / STACK_COUNT, 1.0 * (j + 1) / SECTOR_COUNT);
 			process((i + 1) % STACK_COUNT, (j + 1) % SECTOR_COUNT);
+
+			glTexCoord2f(1.0 * (i + 1) / STACK_COUNT, 1.0 * j / SECTOR_COUNT);
+			process((i + 1) % STACK_COUNT, j);
 		}
 	}
 

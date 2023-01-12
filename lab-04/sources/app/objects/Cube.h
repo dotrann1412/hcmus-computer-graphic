@@ -6,7 +6,7 @@
 class Cube : public Shape3D {
 public:
 	Cube();
-	Cube(const Point3i& pos, const std::vector<int>& sides);
+	Cube(const Point3i& pos, const std::vector<int>& sides, const int& texture);
 	Cube(const Cube& another);
 
 	void render();

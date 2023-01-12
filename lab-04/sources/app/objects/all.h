@@ -8,5 +8,7 @@
 #include "Point3i.h"
 #include "Sphere.h"
 #include "Torus.h"
+#include "RoundedCone.h"
+#include "Point3i.h"
 
 #endif

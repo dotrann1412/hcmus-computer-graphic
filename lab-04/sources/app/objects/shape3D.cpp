@@ -22,25 +22,55 @@ std::vector<std::vector<T>> operator * (const std::vector<std::vector<T>>& aa, c
 
 Shape3D::Shape3D(): mPos(0, 0, 0), xSide(1), ySide(1), zSide(1) {
     mRotation = { {1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1} };
+    mTexture = 0;
 }
 
-Shape3D::Shape3D(const Point3i& pos, const std::vector<int>& sides)
-: mPos(pos) {
-	if (sides.size() != 3)
-		std::cerr << "[ERROR] 3d shape should be created with starting position and exactly 3 sides. Found: " << sides.size() << '\n'; 
+Shape3D::Shape3D(const Point3i& pos, const std::vector<int>& sides, const int& texture)
+: mPos(pos), mTexture(texture) {
+	if (sides.size() != 3) std::cerr << "[ERROR] 3d shape should be created with starting position and exactly 3 sides. Found: " << sides.size() << '\n'; 
 	else xSide = sides[0], ySide = sides[1], zSide = sides[2];
 	mRotation = { {1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}};
 }
 
 Shape3D::Shape3D(const Shape3D& shape) 
-	: mPos(shape.mPos), xSide(shape.xSide), ySide(shape.ySide), zSide(shape.zSide), mRotation(shape.mRotation) {
+	: mPos(shape.mPos), xSide(shape.xSide), ySide(shape.ySide), zSide(shape.zSide), 
+    mRotation(shape.mRotation), mTexture(shape.mTexture) {
 
 }
 
 Shape3D::~Shape3D() {}
 
 Point3i Shape3D::center() {
-	return { mPos.x() + xSide / 2, mPos.y() + ySide / 2, mPos.z() + zSide };
+	return { mPos.x() + 1.0f * xSide / 2, mPos.y() + 1.0f * ySide / 2, mPos.z() + 1.0f * zSide / 2 };
+}
+
+void Shape3D::render() {
+    return;
+    glLoadIdentity();
+
+    Point3i pts = center();
+
+    glTranslatef(
+        pts.x(), pts.y(), pts.z()
+    );
+
+    // draw grid box
+    glBegin(GL_LINES);
+    glColor3f(1, 1, 1);
+
+    // x axis
+    setPixel(0, 0, 0);
+    setPixel(xSide, 0, 0);
+
+    // y axis
+    setPixel(0, 0, 0);
+    setPixel(0, ySide, 0);
+
+    // z axis
+    setPixel(0, 0, 0);
+    setPixel(0, 0, zSide);
+
+    glEnd();
 }
 
 void Shape3D::setPixel(float x, float y, float z) {
@@ -52,28 +82,34 @@ void Shape3D::setPixel(float x, float y, float z) {
 }
 
 void Shape3D::rotate(float x, float y, float z) {
+    float cosx = cos(x), sinx = sin(x);
+
     std::vector<std::vector<float>> xaxis = {
         {1, 0, 0, 0},
-        {0, cos(x), sin(x), 0},
-        {0, -sin(x), cos(x), 0},
+        {0, cosx, sinx, 0},
+        {0, -sinx, cosx, 0},
         {0, 0, 0, 1}
     };
+
+    float cosy = cos(y), siny = sin(y);
 
     std::vector<std::vector<float>> yaxis = {
-        {cos(y), 0, -sin(y), 0},
+        {cosy, 0, -siny, 0},
         {0, 1, 0, 0},
-        {sin(y), 0, cos(y), 0},
+        {siny, 0, cosy, 0},
         {0, 0, 0, 1}
     };
 
+    float cosz = cos(z), sinz = sin(z);
+
     std::vector<std::vector<float>> zaxis = {
-        {cos(z), sin(z), 0, 0}, 
-        {-sin(z), cos(z), 0, 0}, 
+        {cosz, sinz, 0, 0}, 
+        {-sinz, cosz, 0, 0}, 
         {0, 0, 1, 0}, 
         {0, 0, 0, 1}
     };
 
-    mRotation = mRotation * xaxis;
-    mRotation = mRotation * yaxis;
-    mRotation = mRotation * zaxis;
+    mRotation = mRotation * xaxis * yaxis * zaxis;
 }
+
+const double Shape3D::KS_PI = acos(-1);
