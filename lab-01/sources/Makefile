@@ -13,11 +13,11 @@ all_objects = ./Release/string_tokenizer.o ./Release/main.o \
 ./Release/string_tokenizer.o: ./app/utils/string_tokenizer.cpp
 	$(compiler) $(cflag) -o ./Release/string_tokenizer.o ./app/utils/string_tokenizer.cpp
 
-./Release/Point.o: ./app/object/Point.cpp
-	$(compiler) $(cflag) -o ./Release/Point.o ./app/object/Point.cpp
+./Release/Point.o: ./app/objects/Point.cpp
+	$(compiler) $(cflag) -o ./Release/Point.o ./app/objects/Point.cpp
 
-./Release/Color.o: ./app/object/Color.cpp
-	$(compiler) $(cflag) -o ./Release/Color.o ./app/object/Color.cpp
+./Release/Color.o: ./app/objects/Color.cpp
+	$(compiler) $(cflag) -o ./Release/Color.o ./app/objects/Color.cpp
 
 ./Release/utils.o: ./app/utils/utils.cpp
 	$(compiler) $(cflag) -o ./Release/utils.o ./app/utils/utils.cpp $(gllib)

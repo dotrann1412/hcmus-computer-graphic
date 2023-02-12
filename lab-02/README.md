@@ -12,8 +12,8 @@
 Project structure:
 ``` 
     └─── app
-        ├─── object/
-        ├─── utils/
+        ├─── objects /
+        ├─── utils /
         └─── main.cpp
 ```
 

@@ -24,7 +24,7 @@
     <ClCompile Include="app\utils\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\object\Point.cpp">
+    <ClCompile Include="app\objects\Point.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="app\utils\string_tokenizer.cpp">
@@ -38,7 +38,7 @@
     <ClInclude Include="app\utils\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="app\object\Point.h">
+    <ClInclude Include="app\objects\Point.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="app\utils\string_tokenizer.h">

@@ -12,7 +12,7 @@ Project structure
 ``` 
     ├─── app
     │   ├─── object/
-    │   ├───utils/
+    │   ├─── utils/
     |   └─── main.cpp
     └─── Sample-Input/
 ```

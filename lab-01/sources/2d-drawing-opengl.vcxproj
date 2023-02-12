@@ -21,13 +21,13 @@
   <ItemGroup>
     <ClCompile Include="app\app_handler.cpp" />
     <ClCompile Include="app\main.cpp" />
-    <ClCompile Include="app\object\Point.cpp" />
+    <ClCompile Include="app\objects\Point.cpp" />
     <ClCompile Include="app\utils\string_tokenizer.cpp" />
     <ClCompile Include="app\utils\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\app_handler.h" />
-    <ClInclude Include="app\object\Point.h" />
+    <ClInclude Include="app\objects\Point.h" />
     <ClInclude Include="app\utils\string_tokenizer.h" />
     <ClInclude Include="app\utils\utils.h" />
   </ItemGroup>

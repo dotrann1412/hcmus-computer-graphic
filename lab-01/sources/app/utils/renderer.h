@@ -12,8 +12,8 @@
 #include <functional>
 #include <string>
 
-#include "../object/Color.h"
-#include "../object/Point.h"
+#include "../objects/Color.h"
+#include "../objects/Point.h"
 
 // this static class is used to avoid global var using 
 class Renderer

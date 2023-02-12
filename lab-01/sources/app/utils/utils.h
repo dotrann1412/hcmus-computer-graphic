@@ -13,8 +13,8 @@
 // - point: integer
 // - length or distance: float
 
-#include "../object/Point.h"
-#include "../object/Color.h"
+#include "../objects/Point.h"
+#include "../objects/Color.h"
 #include <vector>
 
 bool isInt(const string& s);
