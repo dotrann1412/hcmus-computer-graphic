@@ -94,7 +94,7 @@ To draw multiple objects, use the following command:
   [path_to_executable] -f [path_to_file]
 ```
 
-- Input file is the a multiple-line where each line contains the information of an object. The format of each line as followed:
+- Input file is a multiple-line where each line contains the information of an object. The format of each line as followed:
 
 ```sh
   [algorithm] [extra parameters]
