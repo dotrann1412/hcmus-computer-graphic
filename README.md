@@ -1,15 +1,6 @@
 # HCMUS - Computer Graphic
 
-This repo is used to store all my submissions during the coursework on Computer Graphic.
-
-
-## Tech
-
-General tech used in this project:
-- Visual Studio 2019.
-- Opengl / glut: [follow here](https://www.geeksforgeeks.org/how-to-setup-opengl-with-visual-studio-2019-on-windows-10/).
-- Makefile / g++.
-- C++ 17.
+This repo is used to store all my submissions during the coursework on Computer graphics.
 
 ## Highlights
 
