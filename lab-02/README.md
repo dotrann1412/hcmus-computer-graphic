@@ -17,9 +17,20 @@ Project structure:
         └─── main.cpp
 ```
 
+Details are the same as [here](../lab-01/README.md).
+
 ## **Compiling**
 
 Follow the instruction [here](../lab-01/README.md).
+
+## **Interactions**
+
+- Select the object by `left-clicking` inner the object.
+
+- `right-click` to open the properties menu to change the color of the selection or shape to be 
+
+- Use `Del` key to remove the selected object.
+
 
 ## **Demo**
 
