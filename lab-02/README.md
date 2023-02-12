@@ -27,7 +27,7 @@ Follow the instruction [here](../lab-01/README.md).
 
 - Select the object by `left-clicking` inner the object.
 
-- `right-click` to open the properties menu to change the color of the selection or shape to be 
+- `right-click` to open the properties menu to change the color of the selection or shape to be drawn.
 
 - Use `Del` key to remove the selected object.
 
