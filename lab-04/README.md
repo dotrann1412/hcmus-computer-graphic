@@ -14,7 +14,7 @@ Project structure:
     |   ├─── objects /
     |   ├─── utils /
     |   └─── main.cpp
-    └─── res
+    └─── res / 
 ```
 
 - `app/externals/`: Store all external dependencies.
