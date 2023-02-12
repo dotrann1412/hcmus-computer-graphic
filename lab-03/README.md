@@ -40,3 +40,6 @@ Follow the instruction [here](../lab-01/README.md).
 <p align="center">
     <img src="demo/demo.gif">
 </p>
+
+
+Sorry about the wrong windows' title!
